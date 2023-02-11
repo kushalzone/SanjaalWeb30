@@ -1,9 +1,10 @@
 Run the following command to execute index.js
-#node index.js
+>node index.js
 
 //to run another file you can do
-#node bsc_contract_read.js
-#node liq_1m_contract.js
+>node bsc_contract_read.js
+>
+>node liq_1m_contract.js
 
 
 
