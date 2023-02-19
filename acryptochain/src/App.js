@@ -9,7 +9,7 @@ import { useState } from 'react';
 import * as React from 'react';
 import Web3 from 'web3';
 import './App.css';
-import * as providers from './constants/providers'
+import * as providers from './constants/NetworkProviders'
 
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
@@ -17,7 +17,7 @@ import Container from '@mui/material/Container';
 
 import { getBSCPoolContracts } from './constants/pool_contracts';
 import SinglePool from './components/SinglePool';
-import {BNBPrice, LiquidusPrice} from './external/priceUtil';
+import {BNBPrice, getBNBPrice, LiquidusPrice} from './external/priceUtil';
 import { tokenInfoTable } from './components/TokenInfo';
 //import getBNBPrice  from './external/priceUtil';
 
@@ -29,7 +29,6 @@ const App = () => {
   const [symbol, setSymbol] = useState('');
   const [decimals, setDecimals] = useState('');
   const [loaded, setLoaded] = useState(false);
-
   const [walletAddress, setWalletAddress] = useState('');
 
   //BSC Contracts
@@ -48,7 +47,9 @@ const App = () => {
   //Matic Contracts
 
   //Token Info
-  
+
+  //Price
+    
   const handleInputChange = event => {
     setAddress(event.target.value);
   };
@@ -155,17 +156,20 @@ const App = () => {
           </form>
         </div>
 
+        <h4><font color="green">BNB Price: $<BNBPrice/></font></h4>
+        <h4><font color="green">LIQ Price: $<LiquidusPrice/></font></h4>
+        <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
+        
         <h4>Harvest Ready Tokens - Pending Rewards:</h4>
-        <h4><font color="green"> Wallet Balance - {balanceOf}</font></h4>
-        <SinglePool label = {'12 months pool'} name={harvestReadyTokens12m}/>
-        <p>&nbsp;&nbsp;&nbsp;User Info: {userInfo}</p>
+        <div>
+        <SinglePool label = {'12 months pool'} name={harvestReadyTokens12m} userInfo = {userInfo}/>
         <SinglePool label = {'6 months pool'} name={harvestReadyTokens6m}/>
         <SinglePool label = {'3 months pool'} name={harvestReadyTokens3m}/>
         <SinglePool label = {'1 month pool'} name={harvestReadyTokens1m}/>
         <SinglePool label = {'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap}/>
         <SinglePool label = {'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap}/>
         <SinglePool label = {'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap}/>
-        
+        </div>
         <p>================</p>
         <p>TOTAL HARVEST READY  - <b>{
           Number(harvestReadyTokens12m)
@@ -179,9 +183,7 @@ const App = () => {
         }
         </b>
         </p>
-        <BNBPrice/>
-        <LiquidusPrice/>
-
+        
       </div>
 
       <div>
