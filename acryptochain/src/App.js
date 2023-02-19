@@ -22,6 +22,9 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { getBSCPoolContracts } from './constants/pool_contracts';
+import SinglePool from './components/SinglePool';
+import {BNBPrice, LiquidusPrice} from './external/priceUtil';
+//import getBNBPrice  from './external/priceUtil';
 
 const App = () => {
   const [address, setAddress] = useState('0xc7981767f644C7F8e483DAbDc413e8a371b83079');
@@ -49,7 +52,8 @@ const App = () => {
 
   //Matic Contracts
 
-
+  //Token Info
+  
   const handleInputChange = event => {
     setAddress(event.target.value);
   };
@@ -77,6 +81,7 @@ const App = () => {
     getName(contract, setName);
     getSymbol(contract, setSymbol);
     getDecimals(contract, setDecimals);
+   
 
     setLoaded(true);
 
@@ -157,15 +162,15 @@ const App = () => {
 
         <h4>Harvest Ready Tokens - Pending Rewards:</h4>
         <h4><font color="green"> Wallet Balance - {balanceOf}</font></h4>
-        <p>12 months pool -  {harvestReadyTokens12m}</p>
+        <SinglePool label = {'12 months pool'} name={harvestReadyTokens12m}/>
         <p>&nbsp;&nbsp;&nbsp;User Info: {userInfo}</p>
-        <p>6 months pool -  {harvestReadyTokens6m}</p>
-        <p>3 months pool -  {harvestReadyTokens3m}</p>
-        <p>1 months pool -  {harvestReadyTokens1m}</p>
-        <p>LIQ-BNB Biswap - {harvestReadyTokensLiqBNBBiswap}</p>
-        <p>LIQ-BUSD Apeswap - {harvestReadyTokensLiqBUSDApeswap}</p>
-        <p>LIQ-BNB Pancakeswap - {harvestReadyTokensLiqBNBPancakeswap}</p>
-
+        <SinglePool label = {'6 months pool'} name={harvestReadyTokens6m}/>
+        <SinglePool label = {'3 months pool'} name={harvestReadyTokens3m}/>
+        <SinglePool label = {'1 month pool'} name={harvestReadyTokens1m}/>
+        <SinglePool label = {'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap}/>
+        <SinglePool label = {'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap}/>
+        <SinglePool label = {'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap}/>
+        
         <p>================</p>
         <p>TOTAL HARVEST READY  - <b>{
           Number(harvestReadyTokens12m)
@@ -179,10 +184,10 @@ const App = () => {
         }
         </b>
         </p>
+        <BNBPrice/>
+        <LiquidusPrice/>
+
       </div>
-
-
-
 
       <div>
         <form onSubmit={handleSubmit}>
