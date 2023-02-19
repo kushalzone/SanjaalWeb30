@@ -14,16 +14,11 @@ import * as providers from './constants/providers'
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+
 import { getBSCPoolContracts } from './constants/pool_contracts';
 import SinglePool from './components/SinglePool';
 import {BNBPrice, LiquidusPrice} from './external/priceUtil';
+import { tokenInfoTable } from './components/TokenInfo';
 //import getBNBPrice  from './external/priceUtil';
 
 const App = () => {
@@ -91,7 +86,7 @@ const App = () => {
     event.preventDefault();
 
     // Use Infura as a provider for Web3
-    const web3 = new Web3(new Web3.providers.HttpProvider("https://bsc-dataseed.binance.org"));
+    const web3 = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
 
     // ABI (Application Binary Interface) of the token contract (Farm Pools)
     const abi = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "address", "name": "tokenRecovered", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "AdminTokenRecovery", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Deposit", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "EmergencyWithdraw", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }], "name": "NewRewardPerBlock", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "startBlock", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "endBlock", "type": "uint256" }], "name": "NewStartAndEndBlocks", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }], "name": "OwnershipTransferred", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "blockNumber", "type": "uint256" }], "name": "RewardsStop", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Withdraw", "type": "event" }, { "inputs": [], "name": "PRECISION_FACTOR", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "accTokenPerShare", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "bonusEndBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "depositReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "emergencyRewardWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "emergencyWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "harvest", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "lastRewardBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "owner", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }], "name": "pendingReward", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_tokenAddress", "type": "address" }, { "internalType": "uint256", "name": "_tokenAmount", "type": "uint256" }], "name": "recoverWrongTokens", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "rewardPerBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "rewardTokenSupplyRemaining", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedToken", "outputs": [{ "internalType": "contract IBEP20", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedTokenSupply", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "startBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stopReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_rewardPerBlock", "type": "uint256" }], "name": "updateRewardPerBlock", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_startBlock", "type": "uint256" }, { "internalType": "uint256", "name": "_bonusEndBlock", "type": "uint256" }], "name": "updateStartAndEndBlocks", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "priodInSecond", "type": "uint256" }], "name": "updateVestingTime", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "", "type": "address" }], "name": "userInfo", "outputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "rewardDebt", "type": "uint256" }, { "internalType": "uint256", "name": "lastDepositedAt", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "vestingTime", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "withdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }];
@@ -203,48 +198,7 @@ const App = () => {
       </div>
 
       {loaded &&
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell><b>Item</b></TableCell>
-                <TableCell align="right"><b>Value</b></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-
-              <TableRow>
-                <TableCell align="left">{'Token Address'}</TableCell>
-                <TableCell align="right">{address}</TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left">{'Name'}</TableCell>
-                <TableCell align="right">{name}</TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left">{'Symbol'}</TableCell>
-                <TableCell align="right">{symbol}</TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left">{'Total Supply'}</TableCell>
-                <TableCell align="right">{totalSupply}</TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left">{'Decimals'}</TableCell>
-                <TableCell align="right">{decimals}</TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell align="left">{'Owner'}</TableCell>
-                <TableCell align="right">{owner}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
+        tokenInfoTable(address, name, symbol, totalSupply, decimals, owner)
       }
 
 
@@ -253,6 +207,8 @@ const App = () => {
 
   );
 };
+
+
 
 
 function getName(contract, setName) {
