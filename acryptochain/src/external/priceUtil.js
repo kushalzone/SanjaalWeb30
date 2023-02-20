@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { parseBNumber } from "../services/app_utils";
-import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT } from "../constants/app_constants";
+import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT } from "../constants/liq_app_constants";
 import { BSC_NODE_PROVIDER } from "../constants/NetworkProviders"
 import Web3 from "web3";
 

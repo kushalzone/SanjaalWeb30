@@ -6,34 +6,29 @@
  * Use it at your own risk. Author provides no liablity. 
  */
 
+import { BSC_CONTRACT_LIST } from "./liq_app_constants";
+
 export function getBSCPoolContracts() {
-  //Liquidus 12 Month Pool Contract
-  const address_contract12m = "0xc6AEd0e5B81383Fd8537f4f805492732BDf8efC0";
-  
-  //Liquidus 6 Month Pool Contract
-  const address_contract6m = "0xAb97B17B1547A8776299D4934fF5C8c7b247db6A";
+  const address_contract12m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_12m").address;
+  const address_contract6m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_6m").address;
+  const address_contract3m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_3m").address;
+  const address_contract1m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_1m").address;
+  const address_liqBNBBiswap1m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Biswap_LIQ_BNB_No_Vesting").address;
 
-  //Liquidus 3 Month Pool Contract
-  const address_contract3m = "0x5CcD597728b1F088bFB749D9a9798ED0C6e2211C";
-  
-  //Liquidus 1 Month Pool Contract
-  const address_contract1m = "0xbeBCd3aD501Fc425a71CDC7593CEDeA324176E92";
-
-  // Liquidus   LIQ-BNB Biswap
-  const address_liqBNBBiswap = "0x19646186D7364b8c1Fb60f9772d2B186EA68983D";
-
-  // Liquidus   LIQ-BNB Biswap
-  const address_liqBNBPancakeswap = "0xb944b748A35B6dFFDd924bffD85910F968943a72";
-
-  //Liquidus LIQ-BUSD  Apeswap
-  const address_liqBUSDApeswap = "0x7A0D4A0D88994E73a9eDCd79Ecad9097aCb1d937";
+  // const address_liqBNBBiswap3m = "0x19646186D7364b8c1Fb60f9772d2B186EA68983D";
+  // const address_liqBNBPancakeswap = "0xb944b748A35B6dFFDd924bffD85910F968943a72";
+  // const address_liqBUSDApeswap = "0x7A0D4A0D88994E73a9eDCd79Ecad9097aCb1d937";
+  const address_liqBNBBiswap3m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Biswap_LIQ_BNB_3m").address;
+  const address_liqBNBPancakeswap = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Pancakeswap_LIQ_BNB_1m").address;
+  const address_liqBUSDApeswap = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Apeswap_LIQ_BUSD_1m").address;
 
   return { 
     address_contract12m: address_contract12m, 
     address_contract6m: address_contract6m, 
     address_contract3m: address_contract3m, 
     address_contract1m: address_contract1m, 
-    address_liqBNBBiswap: address_liqBNBBiswap, 
+    address_liqBNBBiswap3m: address_liqBNBBiswap3m, 
+    address_liqBNBBiswap1m: address_liqBNBBiswap1m, 
     address_liqBNBPancakeswap: address_liqBNBPancakeswap, 
     address_liqBUSDApeswap: address_liqBUSDApeswap };
 }

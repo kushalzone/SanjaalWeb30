@@ -19,10 +19,11 @@ import { getBSCPoolContracts } from './constants/pool_contracts';
 import SinglePool from './components/SinglePool';
 import { BNBPrice, LiquidusPrice } from './external/priceUtil';
 import { tokenInfoTable } from './components/TokenInfo';
-import { LIQ_TOKEN_CONTRACT } from './constants/app_constants';
+import { LIQ_TOKEN_CONTRACT } from './constants/liq_app_constants';
 
 const App = () => {
-  const [address, setAddress] = useState('0xc7981767f644C7F8e483DAbDc413e8a371b83079');
+  const [tokenAddress, setTokenAddress] = useState('0xc7981767f644C7F8e483DAbDc413e8a371b83079');
+  const [walletAddress, setWalletAddress] = useState('');
   const [totalSupply, setTotalSupply] = useState('');
   const [owner, setOwner] = useState('');
   const [name, setName] = useState('');
@@ -30,25 +31,25 @@ const App = () => {
   const [decimals, setDecimals] = useState('');
   const [loaded, setLoaded] = useState(false);
   const [tokenInfoLoaded, setTokenInfoLoaded] = useState(false);
-  
-  const [walletAddress, setWalletAddress] = useState('');
 
   //BSC Contracts
   const [harvestReadyTokens12m, setharvestReadyTokens12m] = useState('0.0');
   const [harvestReadyTokens6m, setharvestReadyTokens6m] = useState('0.0');
   const [harvestReadyTokens3m, setharvestReadyTokens3m] = useState('0.0');
   const [harvestReadyTokens1m, setharvestReadyTokens1m] = useState('0.0');
-  const [harvestReadyTokensLiqBNBBiswap, setHarvestReadyTokensLiqBNBBiswap] = useState('0.0');
-  const [harvestReadyTokensLiqBUSDApeswap, setHarvestReadyTokensLiqBUSDApeswap] = useState('0.0');
+  const [harvestReadyTokensLiqBNBBiswap1m, setHarvestReadyTokensLiqBNBBiswap1m] = useState('0.0');
+  const [harvestReadyTokensLiqBNBBiswap3m, setHarvestReadyTokensLiqBNBBiswap3m] = useState('0.0');
+    const [harvestReadyTokensLiqBUSDApeswap, setHarvestReadyTokensLiqBUSDApeswap] = useState('0.0');
   const [harvestReadyTokensLiqBNBPancakeswap, setHarvestReadyTokensLiqBNBPancakeswap] = useState('0.0');
   const [userInfo, setUserInfo] = useState('');
-
   const [balanceOf, setBalanceOf] = useState('0.0');
 
   const [walletResult, setWalletResult] = useState(
     {
       totalHarvestable: 0.0,
       result: [{
+        chain: '',
+        walletAddress: '',
         poolName: '',
         harvestReadyTokens: 0.0,
         userInfo: {
@@ -69,7 +70,7 @@ const App = () => {
   //Price
 
   const handleInputChange = event => {
-    setAddress(event.target.value);
+    setTokenAddress(event.target.value);
   };
 
   const handleWalletInputChange = event => {
@@ -91,7 +92,6 @@ const App = () => {
   const handleWalletSubmit = async event => {
     event.preventDefault();
 
-    // Use Infura as a provider for Web3
     const web3 = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
 
     // ABI (Application Binary Interface) of the token contract (Farm Pools)
@@ -101,7 +101,8 @@ const App = () => {
       address_contract6m,
       address_contract3m,
       address_contract1m,
-      address_liqBNBBiswap,
+      address_liqBNBBiswap1m,
+      address_liqBNBBiswap3m,
       address_liqBUSDApeswap,
       address_liqBNBPancakeswap
     } = getBSCPoolContracts();
@@ -120,8 +121,11 @@ const App = () => {
     contract = new web3.eth.Contract(abi, address_contract1m);
     getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens1m)
 
-    contract = new web3.eth.Contract(abi, address_liqBNBBiswap);
-    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBBiswap)
+    contract = new web3.eth.Contract(abi, address_liqBNBBiswap1m);
+    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBBiswap1m)
+    
+    contract = new web3.eth.Contract(abi, address_liqBNBBiswap3m);
+    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBBiswap3m)
 
     contract = new web3.eth.Contract(abi, address_liqBUSDApeswap);
     getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBUSDApeswap)
@@ -142,28 +146,30 @@ const App = () => {
   return (
     <Container>
 
-    <div>
-      <form onSubmit={handleWalletSubmit}>
-        <h1>Liquidus Farming</h1>
-        <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
+      <div>
+        <form onSubmit={handleWalletSubmit}>
+          <h1>Liquidus Farming</h1>
+          <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
 
-        <label>
-          <h4>Enter wallet address:</h4>
-          <Input value={walletAddress} onChange={handleWalletInputChange} fullWidth={true} />
-        </label>
-        <p />
-        <Button variant="contained" type="submit">Find Pending Reward</Button>
-      </form>
-    </div>
+          <label>
+            <h4>Enter wallet address:</h4>
+            <Input value={walletAddress} onChange={handleWalletInputChange} fullWidth={true} />
+          </label>
+          <p />
+          <Button variant="contained" type="submit">Find Pending Reward</Button>
+        </form>
+      </div>
 
-      {loaded && loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap)}
+      {loaded && loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, 
+        harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, 
+        harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap)}
 
       <div>
         <form onSubmit={handleSubmit}>
           <h1>Token Info Fetcher</h1>
           <label>
             <p >Enter token contract address:</p>
-            <Input value={address} onChange={handleInputChange} fullWidth={true} />
+            <Input value={tokenAddress} onChange={handleInputChange} fullWidth={true} />
           </label>
           <p />
           <Button variant="contained" type="submit">Find Info</Button>
@@ -171,35 +177,37 @@ const App = () => {
         <br />
       </div>
 
-      {tokenInfoLoaded && tokenInfoTable(address, name, symbol, totalSupply, decimals, owner)}
+      {tokenInfoLoaded && tokenInfoTable(tokenAddress, name, symbol, totalSupply, decimals, owner)}
     </Container>
 
   );
 };
 
 
-function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap) {
+function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, 
+    harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap) {
   return <div>
-   
-
     <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
-
     <h4>Harvest Ready Tokens - Pending Rewards:</h4>
     <div>
+      <ol>
       <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
       <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
       <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
       <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
-      <SinglePool label={'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap} />
+      <SinglePool label={'LIQ-BNB Biswap 1m'} name={harvestReadyTokensLiqBNBBiswap1m} />
+      <SinglePool label={'LIQ-BNB Biswap 3m'} name={harvestReadyTokensLiqBNBBiswap3m} />
       <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
       <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
+      </ol>
     </div>
     <p>================</p>
     <p>TOTAL HARVEST READY  - <b>{Number(harvestReadyTokens12m)
       + Number(harvestReadyTokens6m)
       + Number(harvestReadyTokens3m)
       + Number(harvestReadyTokens1m)
-      + Number(harvestReadyTokensLiqBNBBiswap)
+      + Number(harvestReadyTokensLiqBNBBiswap1m)
+      + Number(harvestReadyTokensLiqBNBBiswap3m)
       + Number(harvestReadyTokensLiqBUSDApeswap)
       + Number(harvestReadyTokensLiqBNBPancakeswap)}
     </b>
@@ -261,6 +269,7 @@ function getOwner(contract, setOwner) {
 
   });
 }
+
 
 
 //Wallet Specific Functions
