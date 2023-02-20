@@ -14,6 +14,6 @@ export const LIQ_BNB_CONTRACT = {
 }
 
 export const LIQ_TOKEN_CONTRACT = {
-    addres:'0xc7981767f644C7F8e483DAbDc413e8a371b83079',
+    address: '0xc7981767f644C7F8e483DAbDc413e8a371b83079',
     abi: LIQ_TOKEN_ABI
 }

@@ -17,7 +17,7 @@ import Container from '@mui/material/Container';
 
 import { getBSCPoolContracts } from './constants/pool_contracts';
 import SinglePool from './components/SinglePool';
-import {BNBPrice, LiquidusPrice} from './external/priceUtil';
+import { BNBPrice, LiquidusPrice } from './external/priceUtil';
 import { tokenInfoTable } from './components/TokenInfo';
 import { LIQ_TOKEN_CONTRACT } from './constants/app_constants';
 
@@ -39,11 +39,25 @@ const App = () => {
   const [harvestReadyTokensLiqBNBBiswap, setHarvestReadyTokensLiqBNBBiswap] = useState('0.0');
   const [harvestReadyTokensLiqBUSDApeswap, setHarvestReadyTokensLiqBUSDApeswap] = useState('0.0');
   const [harvestReadyTokensLiqBNBPancakeswap, setHarvestReadyTokensLiqBNBPancakeswap] = useState('0.0');
-  const [balanceOf, setBalanceOf] = useState('0.0');
   const [userInfo, setUserInfo] = useState('');
-  
-  const [walletResult, setWalletResult] = useState({}) 
-  
+
+  const [balanceOf, setBalanceOf] = useState('0.0');
+
+  const [walletResult, setWalletResult] = useState(
+    {
+      totalHarvestable: 0.0,
+      result: [{
+        poolName: '',
+        harvestReadyTokens: 0.0,
+        userInfo: {
+          amount: 0.0,
+          lastDepositedAt: '',
+          rewardDebt: 0.0
+        }
+      }]
+    }
+  )
+
   //ETH Contracts
 
   //Matic Contracts
@@ -51,7 +65,7 @@ const App = () => {
   //Token Info
 
   //Price
-    
+
   const handleInputChange = event => {
     setAddress(event.target.value);
   };
@@ -139,19 +153,19 @@ const App = () => {
           </form>
         </div>
 
-        <h4><font color="green">BNB Price: $<BNBPrice/></font></h4>
-        <h4><font color="green">LIQ Price: $<LiquidusPrice/></font></h4>
+        <h4><font color="green">BNB Price: $<BNBPrice /></font></h4>
+        <h4><font color="green">LIQ Price: $<LiquidusPrice /></font></h4>
         <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
-        
+
         <h4>Harvest Ready Tokens - Pending Rewards:</h4>
         <div>
-        <SinglePool label = {'12 months pool'} name={harvestReadyTokens12m} userInfo = {userInfo}/>
-        <SinglePool label = {'6 months pool'} name={harvestReadyTokens6m}/>
-        <SinglePool label = {'3 months pool'} name={harvestReadyTokens3m}/>
-        <SinglePool label = {'1 month pool'} name={harvestReadyTokens1m}/>
-        <SinglePool label = {'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap}/>
-        <SinglePool label = {'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap}/>
-        <SinglePool label = {'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap}/>
+          <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
+          <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
+          <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
+          <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
+          <SinglePool label={'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap} />
+          <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
+          <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
         </div>
         <p>================</p>
         <p>TOTAL HARVEST READY  - <b>{
@@ -166,7 +180,7 @@ const App = () => {
         }
         </b>
         </p>
-        
+
       </div>
 
       <div>
@@ -279,10 +293,10 @@ function getUserInfo(contract, walletAddress, setFunction) {
 
       const rewardsEther = Web3.utils.fromWei(result.rewardDebt, 'ether');
       const depositedAmountEther = Web3.utils.fromWei(result.amount, 'ether');
-      
+
       const dateVal = new Date(Number(result.lastDepositedAt) * 1000).toLocaleDateString('en-US');
-      setFunction("Deposited Amount: " + Number(depositedAmountEther).toFixed(2) +  " Reward Debt: " + Number(rewardsEther).toFixed(2) + " Last Deposited:" + dateVal)
-      
+      setFunction("Deposited Amount: " + Number(depositedAmountEther).toFixed(2) + "Reward Debt: " + Number(rewardsEther).toFixed(2) + "Last Deposited:" + dateVal)
+
     }
   });
 
