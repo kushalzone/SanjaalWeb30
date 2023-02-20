@@ -29,6 +29,8 @@ const App = () => {
   const [symbol, setSymbol] = useState('');
   const [decimals, setDecimals] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [tokenInfoLoaded, setTokenInfoLoaded] = useState(false);
+  
   const [walletAddress, setWalletAddress] = useState('');
 
   //BSC Contracts
@@ -83,7 +85,7 @@ const App = () => {
     getName(contract, setName);
     getSymbol(contract, setSymbol);
     getDecimals(contract, setDecimals);
-    setLoaded(true);
+    setTokenInfoLoaded(true);
   };
 
   const handleWalletSubmit = async event => {
@@ -140,48 +142,21 @@ const App = () => {
   return (
     <Container>
 
-      <div>
-        <div>
-          <form onSubmit={handleWalletSubmit}>
-            <h1>Liquidus Farming</h1>
-            <label>
-              <h4 >Enter wallet address:</h4>
-              <Input value={walletAddress} onChange={handleWalletInputChange} fullWidth={true} />
-            </label>
-            <p />
-            <Button variant="contained" type="submit">Find Pending Reward</Button>
-          </form>
-        </div>
+    <div>
+      <form onSubmit={handleWalletSubmit}>
+        <h1>Liquidus Farming</h1>
+        <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
 
-        <h4><font color="green">BNB Price: $<BNBPrice /></font></h4>
-        <h4><font color="green">LIQ Price: $<LiquidusPrice /></font></h4>
-        <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
+        <label>
+          <h4>Enter wallet address:</h4>
+          <Input value={walletAddress} onChange={handleWalletInputChange} fullWidth={true} />
+        </label>
+        <p />
+        <Button variant="contained" type="submit">Find Pending Reward</Button>
+      </form>
+    </div>
 
-        <h4>Harvest Ready Tokens - Pending Rewards:</h4>
-        <div>
-          <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
-          <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
-          <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
-          <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
-          <SinglePool label={'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap} />
-          <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
-          <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
-        </div>
-        <p>================</p>
-        <p>TOTAL HARVEST READY  - <b>{
-          Number(harvestReadyTokens12m)
-          + Number(harvestReadyTokens6m)
-          + Number(harvestReadyTokens3m)
-          + Number(harvestReadyTokens1m)
-          + Number(harvestReadyTokensLiqBNBBiswap)
-          + Number(harvestReadyTokensLiqBUSDApeswap)
-          + Number(harvestReadyTokensLiqBNBPancakeswap)
-
-        }
-        </b>
-        </p>
-
-      </div>
+      {loaded && loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap)}
 
       <div>
         <form onSubmit={handleSubmit}>
@@ -196,12 +171,42 @@ const App = () => {
         <br />
       </div>
 
-      {loaded && tokenInfoTable(address, name, symbol, totalSupply, decimals, owner)}
+      {tokenInfoLoaded && tokenInfoTable(address, name, symbol, totalSupply, decimals, owner)}
     </Container>
 
   );
 };
 
+
+function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap) {
+  return <div>
+   
+
+    <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
+
+    <h4>Harvest Ready Tokens - Pending Rewards:</h4>
+    <div>
+      <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
+      <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
+      <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
+      <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
+      <SinglePool label={'LIQ-BNB Biswap'} name={harvestReadyTokensLiqBNBBiswap} />
+      <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
+      <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
+    </div>
+    <p>================</p>
+    <p>TOTAL HARVEST READY  - <b>{Number(harvestReadyTokens12m)
+      + Number(harvestReadyTokens6m)
+      + Number(harvestReadyTokens3m)
+      + Number(harvestReadyTokens1m)
+      + Number(harvestReadyTokensLiqBNBBiswap)
+      + Number(harvestReadyTokensLiqBUSDApeswap)
+      + Number(harvestReadyTokensLiqBNBPancakeswap)}
+    </b>
+    </p>
+
+  </div>;
+}
 
 function getName(contract, setName) {
   contract.methods.name().call((error, result) => {
