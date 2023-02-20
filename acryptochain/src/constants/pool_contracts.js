@@ -14,10 +14,6 @@ export function getBSCPoolContracts() {
   const address_contract3m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_3m").address;
   const address_contract1m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "LIQ_Single_Token_1m").address;
   const address_liqBNBBiswap1m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Biswap_LIQ_BNB_No_Vesting").address;
-
-  // const address_liqBNBBiswap3m = "0x19646186D7364b8c1Fb60f9772d2B186EA68983D";
-  // const address_liqBNBPancakeswap = "0xb944b748A35B6dFFDd924bffD85910F968943a72";
-  // const address_liqBUSDApeswap = "0x7A0D4A0D88994E73a9eDCd79Ecad9097aCb1d937";
   const address_liqBNBBiswap3m = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Biswap_LIQ_BNB_3m").address;
   const address_liqBNBPancakeswap = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Pancakeswap_LIQ_BNB_1m").address;
   const address_liqBUSDApeswap = BSC_CONTRACT_LIST.find( item => item.contractUniqueName === "Apeswap_LIQ_BUSD_1m").address;

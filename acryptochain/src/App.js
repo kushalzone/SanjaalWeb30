@@ -20,6 +20,7 @@ import SinglePool from './components/SinglePool';
 import { BNBPrice, LiquidusPrice } from './external/priceUtil';
 import { tokenInfoTable } from './components/TokenInfo';
 import { LIQ_TOKEN_CONTRACT } from './constants/liq_app_constants';
+import { PoolHarvestResult } from './models/AppInterfaces';
 
 const App = () => {
   const [tokenAddress, setTokenAddress] = useState('0xc7981767f644C7F8e483DAbDc413e8a371b83079');
@@ -39,27 +40,12 @@ const App = () => {
   const [harvestReadyTokens1m, setharvestReadyTokens1m] = useState('0.0');
   const [harvestReadyTokensLiqBNBBiswap1m, setHarvestReadyTokensLiqBNBBiswap1m] = useState('0.0');
   const [harvestReadyTokensLiqBNBBiswap3m, setHarvestReadyTokensLiqBNBBiswap3m] = useState('0.0');
-    const [harvestReadyTokensLiqBUSDApeswap, setHarvestReadyTokensLiqBUSDApeswap] = useState('0.0');
+  const [harvestReadyTokensLiqBUSDApeswap, setHarvestReadyTokensLiqBUSDApeswap] = useState('0.0');
   const [harvestReadyTokensLiqBNBPancakeswap, setHarvestReadyTokensLiqBNBPancakeswap] = useState('0.0');
   const [userInfo, setUserInfo] = useState('');
   const [balanceOf, setBalanceOf] = useState('0.0');
 
-  const [walletResult, setWalletResult] = useState(
-    {
-      totalHarvestable: 0.0,
-      result: [{
-        chain: '',
-        walletAddress: '',
-        poolName: '',
-        harvestReadyTokens: 0.0,
-        userInfo: {
-          amount: 0.0,
-          lastDepositedAt: '',
-          rewardDebt: 0.0
-        }
-      }]
-    }
-  )
+  const [poolHarvestResult, setPoolHarvestResult] = useState({})
 
   //ETH Contracts
 
@@ -111,6 +97,9 @@ const App = () => {
     let contract = new web3.eth.Contract(abi, address_contract12m);
     getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens12m)
     getUserInfo(contract, walletAddress, setUserInfo) //TODO: Do this for all pools
+
+    //Use an Object
+    getharvestReadyTokensV2(contract, walletAddress, poolHarvestResult, setPoolHarvestResult)
 
     contract = new web3.eth.Contract(abi, address_contract6m);
     getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens6m)
@@ -164,6 +153,8 @@ const App = () => {
         harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, 
         harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap)}
 
+        <h4>From Object: {JSON.stringify(poolHarvestResult, null, 2)}</h4>
+
       <div>
         <form onSubmit={handleSubmit}>
           <h1>Token Info Fetcher</h1>
@@ -202,14 +193,16 @@ function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputCh
       </ol>
     </div>
     <p>================</p>
-    <p>TOTAL HARVEST READY  - <b>{Number(harvestReadyTokens12m)
+    <p>TOTAL HARVEST READY  - <b>{
+        Number(harvestReadyTokens12m)
       + Number(harvestReadyTokens6m)
       + Number(harvestReadyTokens3m)
       + Number(harvestReadyTokens1m)
       + Number(harvestReadyTokensLiqBNBBiswap1m)
       + Number(harvestReadyTokensLiqBNBBiswap3m)
       + Number(harvestReadyTokensLiqBUSDApeswap)
-      + Number(harvestReadyTokensLiqBNBPancakeswap)}
+      + Number(harvestReadyTokensLiqBNBPancakeswap)
+      }
     </b>
     </p>
 
@@ -278,11 +271,24 @@ function getharvestReadyTokens(contract, walletAddress, setFunction) {
     if (error) {
       console.error(error);
     } else {
-
       const rewardsEther = Web3.utils.fromWei(result, 'ether');
       setFunction(parseFloat(rewardsEther).toFixed(2)); //2 Decimal Places
     }
 
+  });
+}
+
+function getharvestReadyTokensV2(contract, walletAddress, poolHarvestResult, setState) {
+  contract.methods.pendingReward(walletAddress).call((error, result) => {
+    if (error) {
+      console.error(error);
+    } else {
+      var rewardsEther = Web3.utils.fromWei(result, 'ether');
+      //poolHarvestResult.poolHarvestResult[0].harvestReadyTokens = rewardsEther
+      const poolHarvestResultNew={rewardsEther: rewardsEther}
+      //setState({...poolHarvestResult, poolHarvestResultNew})
+      setState({poolHarvestResultNew})
+    }
   });
 }
 
