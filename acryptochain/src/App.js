@@ -5,7 +5,7 @@
  * 
  * Use it at your own risk. Author provides no liablity. 
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as React from 'react';
 import Web3 from 'web3';
 import './App.css';
@@ -19,8 +19,8 @@ import { getBSCPoolContracts } from './constants/pool_contracts';
 import SinglePool from './components/SinglePool';
 import { BNBPrice, LiquidusPrice } from './external/priceUtil';
 import { tokenInfoTable } from './components/TokenInfo';
-import { LIQ_TOKEN_CONTRACT } from './constants/liq_app_constants';
-import { PoolHarvestResult } from './models/AppInterfaces';
+import { BSC_CONTRACT_LIST, LIQ_TOKEN_CONTRACT } from './constants/liq_app_constants';
+import RewardsDetail from './components/RewardsDetail';
 
 const App = () => {
   const [tokenAddress, setTokenAddress] = useState('0xc7981767f644C7F8e483DAbDc413e8a371b83079');
@@ -44,8 +44,7 @@ const App = () => {
   const [harvestReadyTokensLiqBNBPancakeswap, setHarvestReadyTokensLiqBNBPancakeswap] = useState('0.0');
   const [userInfo, setUserInfo] = useState('');
   const [balanceOf, setBalanceOf] = useState('0.0');
-
-  const [poolHarvestResult, setPoolHarvestResult] = useState({})
+  const [poolHarvestResult, setPoolHarvestResult] = useState([])
 
   //ETH Contracts
 
@@ -61,6 +60,7 @@ const App = () => {
 
   const handleWalletInputChange = event => {
     setWalletAddress(event.target.value);
+    //setPoolHarvestResult([])
   };
 
   const handleSubmit = async event => {
@@ -76,51 +76,61 @@ const App = () => {
   };
 
   const handleWalletSubmit = async event => {
+    setPoolHarvestResult(null)
     event.preventDefault();
+
+    setPoolHarvestResult([{}])
 
     const web3 = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
 
-    // ABI (Application Binary Interface) of the token contract (Farm Pools)
-    const abi = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "address", "name": "tokenRecovered", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "AdminTokenRecovery", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Deposit", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "EmergencyWithdraw", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }], "name": "NewRewardPerBlock", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "startBlock", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "endBlock", "type": "uint256" }], "name": "NewStartAndEndBlocks", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }], "name": "OwnershipTransferred", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "blockNumber", "type": "uint256" }], "name": "RewardsStop", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Withdraw", "type": "event" }, { "inputs": [], "name": "PRECISION_FACTOR", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "accTokenPerShare", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "bonusEndBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "depositReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "emergencyRewardWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "emergencyWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "harvest", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "lastRewardBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "owner", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }], "name": "pendingReward", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_tokenAddress", "type": "address" }, { "internalType": "uint256", "name": "_tokenAmount", "type": "uint256" }], "name": "recoverWrongTokens", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "rewardPerBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "rewardTokenSupplyRemaining", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedToken", "outputs": [{ "internalType": "contract IBEP20", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedTokenSupply", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "startBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stopReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_rewardPerBlock", "type": "uint256" }], "name": "updateRewardPerBlock", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_startBlock", "type": "uint256" }, { "internalType": "uint256", "name": "_bonusEndBlock", "type": "uint256" }], "name": "updateStartAndEndBlocks", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "priodInSecond", "type": "uint256" }], "name": "updateVestingTime", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "", "type": "address" }], "name": "userInfo", "outputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "rewardDebt", "type": "uint256" }, { "internalType": "uint256", "name": "lastDepositedAt", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "vestingTime", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "withdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }];
-    const {
-      address_contract12m,
-      address_contract6m,
-      address_contract3m,
-      address_contract1m,
-      address_liqBNBBiswap1m,
-      address_liqBNBBiswap3m,
-      address_liqBUSDApeswap,
-      address_liqBNBPancakeswap
-    } = getBSCPoolContracts();
+    // // ABI (Application Binary Interface) of the token contract (Farm Pools)
+    // const abi = [{ "inputs": [], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "address", "name": "tokenRecovered", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "AdminTokenRecovery", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Deposit", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "EmergencyWithdraw", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "rewardPerBlock", "type": "uint256" }], "name": "NewRewardPerBlock", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "startBlock", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "endBlock", "type": "uint256" }], "name": "NewStartAndEndBlocks", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" }, { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }], "name": "OwnershipTransferred", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": false, "internalType": "uint256", "name": "blockNumber", "type": "uint256" }], "name": "RewardsStop", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }], "name": "Withdraw", "type": "event" }, { "inputs": [], "name": "PRECISION_FACTOR", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "accTokenPerShare", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "bonusEndBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "deposit", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "depositReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "emergencyRewardWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "emergencyWithdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "harvest", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "lastRewardBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "owner", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_user", "type": "address" }], "name": "pendingReward", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "_tokenAddress", "type": "address" }, { "internalType": "uint256", "name": "_tokenAmount", "type": "uint256" }], "name": "recoverWrongTokens", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [], "name": "rewardPerBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "rewardTokenSupplyRemaining", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedToken", "outputs": [{ "internalType": "contract IBEP20", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stakedTokenSupply", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "startBlock", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "stopReward", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }], "name": "transferOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_rewardPerBlock", "type": "uint256" }], "name": "updateRewardPerBlock", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_startBlock", "type": "uint256" }, { "internalType": "uint256", "name": "_bonusEndBlock", "type": "uint256" }], "name": "updateStartAndEndBlocks", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "priodInSecond", "type": "uint256" }], "name": "updateVestingTime", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "", "type": "address" }], "name": "userInfo", "outputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "rewardDebt", "type": "uint256" }, { "internalType": "uint256", "name": "lastDepositedAt", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "vestingTime", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }], "name": "withdraw", "outputs": [], "stateMutability": "nonpayable", "type": "function" }];
+    // const {
+    //   address_contract12m,
+    //   address_contract6m,
+    //   address_contract3m,
+    //   address_contract1m,
+    //   address_liqBNBBiswap1m,
+    //   address_liqBNBBiswap3m,
+    //   address_liqBUSDApeswap,
+    //   address_liqBNBPancakeswap
+    // } = getBSCPoolContracts();
 
-    // Create a contract object with the ABI and contract address
-    let contract = new web3.eth.Contract(abi, address_contract12m);
-    getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens12m)
-    getUserInfo(contract, walletAddress, setUserInfo) //TODO: Do this for all pools
+    // // Create a contract object with the ABI and contract address
+    // let contract = new web3.eth.Contract(abi, address_contract12m);
+    // getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens12m)
+    // getUserInfo(contract, walletAddress, setUserInfo) //TODO: Do this for all pools
 
-    //Use an Object
-    getharvestReadyTokensV2(contract, walletAddress, poolHarvestResult, setPoolHarvestResult)
 
-    contract = new web3.eth.Contract(abi, address_contract6m);
-    getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens6m)
+    // let contract1 = new web3.eth.Contract(abi, address_contract6m);
+    // getharvestReadyTokens(contract1, walletAddress, setharvestReadyTokens6m)
 
-    contract = new web3.eth.Contract(abi, address_contract3m);
-    getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens3m)
 
-    contract = new web3.eth.Contract(abi, address_contract1m);
-    getharvestReadyTokens(contract, walletAddress, setharvestReadyTokens1m)
+    // let contract2 = new web3.eth.Contract(abi, address_contract3m);
+    // getharvestReadyTokens(contract2, walletAddress, setharvestReadyTokens3m)
 
-    contract = new web3.eth.Contract(abi, address_liqBNBBiswap1m);
-    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBBiswap1m)
-    
-    contract = new web3.eth.Contract(abi, address_liqBNBBiswap3m);
-    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBBiswap3m)
 
-    contract = new web3.eth.Contract(abi, address_liqBUSDApeswap);
-    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBUSDApeswap)
 
-    contract = new web3.eth.Contract(abi, address_liqBNBPancakeswap);
-    getharvestReadyTokens(contract, walletAddress, setHarvestReadyTokensLiqBNBPancakeswap)
+    // let contract3 = new web3.eth.Contract(abi, address_contract1m);
+    // getharvestReadyTokens(contract3, walletAddress, setharvestReadyTokens1m)
+
+    // let contract4 = new web3.eth.Contract(abi, address_liqBNBBiswap1m);
+    // getharvestReadyTokens(contract4, walletAddress, setHarvestReadyTokensLiqBNBBiswap1m)
+
+    // let contract5 = new web3.eth.Contract(abi, address_liqBNBBiswap3m);
+    // getharvestReadyTokens(contract5, walletAddress, setHarvestReadyTokensLiqBNBBiswap3m)
+
+    // let contract6 = new web3.eth.Contract(abi, address_liqBUSDApeswap);
+    // getharvestReadyTokens(contract6, walletAddress, setHarvestReadyTokensLiqBUSDApeswap)
+
+    // let contract7 = new web3.eth.Contract(abi, address_liqBNBPancakeswap);
+    // getharvestReadyTokens(contract7, walletAddress, setHarvestReadyTokensLiqBNBPancakeswap)
+
+    BSC_CONTRACT_LIST.forEach(c => {
+        let web3Contract = new web3.eth.Contract(c.abi, c.address);
+        getharvestReadyTokensV2(c.contractUniqueName, "BSC", web3Contract, walletAddress, setPoolHarvestResult)
+      }
+    );
 
     /**
      * WAllet specific operations
@@ -149,11 +159,8 @@ const App = () => {
         </form>
       </div>
 
-      {loaded && loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, 
-        harvestReadyTokens12m, userInfo, harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, 
-        harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap)}
-
-        <h4>From Object: {JSON.stringify(poolHarvestResult, null, 2)}</h4>
+      <h4>REWARDS DETAILS : BSC POOL</h4>
+      {poolHarvestResult && RewardsDetail(poolHarvestResult)}
 
       <div>
         <form onSubmit={handleSubmit}>
@@ -175,39 +182,39 @@ const App = () => {
 };
 
 
-function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo, 
-    harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap) {
-  return <div>
-    <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
-    <h4>Harvest Ready Tokens - Pending Rewards:</h4>
-    <div>
-      <ol>
-      <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
-      <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
-      <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
-      <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
-      <SinglePool label={'LIQ-BNB Biswap 1m'} name={harvestReadyTokensLiqBNBBiswap1m} />
-      <SinglePool label={'LIQ-BNB Biswap 3m'} name={harvestReadyTokensLiqBNBBiswap3m} />
-      <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
-      <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
-      </ol>
-    </div>
-    <p>================</p>
-    <p>TOTAL HARVEST READY  - <b>{
-        Number(harvestReadyTokens12m)
-      + Number(harvestReadyTokens6m)
-      + Number(harvestReadyTokens3m)
-      + Number(harvestReadyTokens1m)
-      + Number(harvestReadyTokensLiqBNBBiswap1m)
-      + Number(harvestReadyTokensLiqBNBBiswap3m)
-      + Number(harvestReadyTokensLiqBUSDApeswap)
-      + Number(harvestReadyTokensLiqBNBPancakeswap)
-      }
-    </b>
-    </p>
+// function loadWalletDetail(handleWalletSubmit, walletAddress, handleWalletInputChange, balanceOf, harvestReadyTokens12m, userInfo,
+//   harvestReadyTokens6m, harvestReadyTokens3m, harvestReadyTokens1m, harvestReadyTokensLiqBNBBiswap1m, harvestReadyTokensLiqBNBBiswap3m, harvestReadyTokensLiqBUSDApeswap, harvestReadyTokensLiqBNBPancakeswap) {
+//   return <div>
+//     <h4><font color="green"> Wallet Balance - {balanceOf} LIQ</font></h4>
+//     <h4>Harvest Ready Tokens - Pending Rewards:</h4>
+//     <div>
+//       <ol>
+//         <SinglePool label={'12 months pool'} name={harvestReadyTokens12m} userInfo={userInfo} />
+//         <SinglePool label={'6 months pool'} name={harvestReadyTokens6m} />
+//         <SinglePool label={'3 months pool'} name={harvestReadyTokens3m} />
+//         <SinglePool label={'1 month pool'} name={harvestReadyTokens1m} />
+//         <SinglePool label={'LIQ-BNB Biswap 1m'} name={harvestReadyTokensLiqBNBBiswap1m} />
+//         <SinglePool label={'LIQ-BNB Biswap 3m'} name={harvestReadyTokensLiqBNBBiswap3m} />
+//         <SinglePool label={'LIQ-BUSD Apeswap'} name={harvestReadyTokensLiqBUSDApeswap} />
+//         <SinglePool label={'LIQ-BNB Pancakeswap'} name={harvestReadyTokensLiqBNBPancakeswap} />
+//       </ol>
+//     </div>
+//     <p>=======================</p>
+//     <p>TOTAL HARVEST READY  - <b>{
+//       Number(harvestReadyTokens12m)
+//       + Number(harvestReadyTokens6m)
+//       + Number(harvestReadyTokens3m)
+//       + Number(harvestReadyTokens1m)
+//       + Number(harvestReadyTokensLiqBNBBiswap1m)
+//       + Number(harvestReadyTokensLiqBNBBiswap3m)
+//       + Number(harvestReadyTokensLiqBUSDApeswap)
+//       + Number(harvestReadyTokensLiqBNBPancakeswap)
+//     }
+//     </b>
+//     </p>
 
-  </div>;
-}
+//   </div>;
+// }
 
 function getName(contract, setName) {
   contract.methods.name().call((error, result) => {
@@ -263,8 +270,6 @@ function getOwner(contract, setOwner) {
   });
 }
 
-
-
 //Wallet Specific Functions
 function getharvestReadyTokens(contract, walletAddress, setFunction) {
   contract.methods.pendingReward(walletAddress).call((error, result) => {
@@ -278,18 +283,27 @@ function getharvestReadyTokens(contract, walletAddress, setFunction) {
   });
 }
 
-function getharvestReadyTokensV2(contract, walletAddress, poolHarvestResult, setState) {
-  contract.methods.pendingReward(walletAddress).call((error, result) => {
-    if (error) {
-      console.error(error);
-    } else {
-      var rewardsEther = Web3.utils.fromWei(result, 'ether');
-      //poolHarvestResult.poolHarvestResult[0].harvestReadyTokens = rewardsEther
-      const poolHarvestResultNew={rewardsEther: rewardsEther}
-      //setState({...poolHarvestResult, poolHarvestResultNew})
-      setState({poolHarvestResultNew})
-    }
-  });
+async function getharvestReadyTokensV2(poolName, chain, contract, walletAddress, setFunction) {
+  try {
+    const result = await contract.methods.pendingReward(walletAddress).call();
+    var harvestReadyTokens = Web3.utils.fromWei(result, 'ether');
+
+    const userInfo = await contract.methods.userInfo(walletAddress).call();
+    const rewardDebtEther = Web3.utils.fromWei(userInfo.rewardDebt, 'ether');
+    const amountEther = Web3.utils.fromWei(userInfo.amount, 'ether');
+    const datlastDepositedAt = new Date(Number(userInfo.lastDepositedAt) * 1000).toLocaleDateString('en-US');
+    
+    const poolHarvestResult = {
+      chain: chain,
+      walletAddress: walletAddress,
+      poolName: poolName,
+      harvestReadyTokens: harvestReadyTokens,
+      userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedAt }
+    };
+    setFunction(prevState => [...prevState, poolHarvestResult]);
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 function getBalanceOf(contract, walletAddress, setFunction) {
@@ -321,4 +335,5 @@ function getUserInfo(contract, walletAddress, setFunction) {
   });
 
 }
+
 export default App;
