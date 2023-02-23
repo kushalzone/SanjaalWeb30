@@ -1,4 +1,11 @@
 import React from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 function RewardsDetail(data) {
 
@@ -9,35 +16,41 @@ function RewardsDetail(data) {
 
     return (
         <div>
-            <table>
-                <thead>
-                    <tr>
-                        {/* <th>Chain</th> */}
-                        {/* <th>Wallet Address</th> */}
-                        <th>Pool Name</th>
-                        <th>Harvest Ready Tokens</th>
-                        <th>Amount</th>
-                        <th>Reward Debt</th>
-                        <th>Last Deposited At</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }}>
+                <TableHead>
+                    <TableRow>
+                        {/* <TableCell>Chain</TableCell> */}
+                        {/* <TableCell>Wallet Address</TableCell> */}
+                        <TableCell>Pool Name</TableCell>
+                        <TableCell>Harvest Ready Tokens</TableCell>
+                        <TableCell>Amount</TableCell>
+                        <TableCell>Reward Debt</TableCell>
+                        <TableCell>Last Deposited At</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {data.map((item, index) => {
+                        if(item.poolName) {
                         return (
-                            <tr key={index}>
-                                {/* <td>{item.chain || '-'}</td> */}
-                                {/* <td>{item.walletAddress || '-'}</td> */}
-                                <td>{item.poolName || '-'}</td>
-                                <td>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</td>
-                                <td>{Number(item.userInfo?.amount).toFixed(2) || '-'}</td>
-                                <td>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</td>
-                                <td>{item.userInfo?.lastDepositedAt || '-'}</td>
-                            </tr>
+                            <TableRow key={index}>
+                                {/* <TableCell>{item.chain || '-'}</TableCell> */}
+                                {/* <TableCell>{item.walletAddress || '-'}</TableCell> */}
+                                <TableCell>{item.poolName || '-'}</TableCell>
+                                <TableCell>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</TableCell>
+                                <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
+                                <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell>
+                                <TableCell>{item.userInfo?.lastDepositedAt || '-'}</TableCell>
+                            </TableRow>
                         );
+                        } else { 
+                            return ''
+                        }
                     })}
-                </tbody>
-            </table>
-            <h4>Total Harvest Ready Tokens: {totalHarvestReadyTokens}</h4>
+                </TableBody>
+            </Table>
+            </TableContainer>
+            <h4><font color="red">Total Harvest Ready Tokens: {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
         </div>
     );
 }
