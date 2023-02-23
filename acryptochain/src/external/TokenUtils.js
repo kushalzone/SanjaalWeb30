@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { parseBNumber } from "../services/app_utils";
-import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, LIQ_TOKEN_CONTRACT } from "../constants/liq_app_constants";
+import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_TOKEN_CONTRACT } from "../constants/liq_app_constants";
 import { BSC_NODE_PROVIDER } from "../constants/NetworkProviders"
 import Web3 from "web3";
+import { tokenInfoTable } from "../components/TokenInfo";
 
 /**
  * @returns Price of BNB in USD
@@ -30,7 +31,7 @@ export const BNBPrice = () => {
 };
 
 /**
- * @returns Price of LIQ token in USD
+ * @returns Information about the token
  */
 export const LIQTokenInfo = () => {
     const [tokenInfo, setTokenInfo] = useState([]);
@@ -39,14 +40,18 @@ export const LIQTokenInfo = () => {
         const getTokenInfo = async () => {
             try {
                 const web3 = new Web3(BSC_NODE_PROVIDER);
-                const tokenContract = new web3.eth.Contract(LIQ_TOKEN_CONTRACT.abi, LIQ_TOKEN_CONTRACT.address);
+                const tokenContract = new web3.eth.Contract(BSC_LIQ_TOKEN_CONTRACT.abi, BSC_LIQ_TOKEN_CONTRACT.address);
                 const name = await tokenContract.methods.name().call();
                 const symbol = await tokenContract.methods.symbol().call();
                 const owner = await tokenContract.methods.owner().call();
                 const totalSupply = await tokenContract.methods.totalSupply().call();
                 const decimals = await tokenContract.methods.decimals().call();
-                const info = {name: name, symbol: symbol, owner: owner, totalSupply:totalSupply, decimals:decimals};
-                setTokenInfo(JSON.stringify(info))
+
+                const totalSupplyEther = Web3.utils.fromWei(totalSupply, 'ether');
+               
+                const result = tokenInfoTable(BSC_LIQ_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner)
+
+                setTokenInfo(result)
             } catch (error) {
                 console.error(error);
             }

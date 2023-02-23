@@ -16,6 +16,7 @@ function RewardsDetail(data) {
 
     return (
         <div>
+            <h4><font color="red">Total Harvest Ready Tokens: {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }}>
                 <TableHead>
@@ -50,7 +51,7 @@ function RewardsDetail(data) {
                 </TableBody>
             </Table>
             </TableContainer>
-            <h4><font color="red">Total Harvest Ready Tokens: {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
+
         </div>
     );
 }
