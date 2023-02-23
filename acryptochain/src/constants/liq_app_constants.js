@@ -1,9 +1,12 @@
-import BNB_ABI from '../abis/bsc/bnb_abi.json'
+import BSC_BNB_ABI from '../abis/bsc/bnb_abi.json'
 import BSC_LIQ_BNB_LP_TOKEN_ABI from '../abis/bsc/liq_bnb_abi.json'
 import BSC_LIQ_SINGLE_TOKEN_ABI from '../abis/bsc/bsc_liq_token_abi.json'
+
+import CRONOS_LIQ_SINGLE_TOKEN_ABI from '../abis/cronos/cronos_liq_single_token_abi.json'
+import CRONOS_LIQ_CRO_LP_TOKEN_ABI from '../abis/cronos/liq_cro_lp_abi.json'
+
 import LIQ_MATIC_LP_TOKEN_ABI from '../abis/matic/liq_matic_lp_abi.json'
 import LIQ_ETH_LP_TOKEN_ABI from '../abis/eth/liq_eth_lp_abi.json'
-import LIQ_CRO_LP_TOKEN_ABI from '../abis/cronos/liq_cro_lp_abi.json'
 import LIQ_FARM_CONTRACT_BSC_ABI from '../abis/bsc/liq_bsc_farm_single_token_abi.json';
 
 const LIQ_SINGLE_TOKEN_ETH_ABI = "" //DELETE AND FIX
@@ -16,12 +19,17 @@ const FarmContractvestingPeriodInMonths___FOR_matic = "" //DELETE AND FIX
 
 export const CONTRACT_FOR_BNB = {
     address: '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16',
-    abi: BNB_ABI
+    abi: BSC_BNB_ABI
 }
 
-export const BSC_LIQ_TOKEN_CONTRACT = {
+export const BSC_LIQ_SINGLE_TOKEN_CONTRACT = {
     address: '0xc7981767f644C7F8e483DAbDc413e8a371b83079',
     abi: BSC_LIQ_SINGLE_TOKEN_ABI
+}
+
+export const CRONOS_LIQ_SINGLE_TOKEN_CONTRACT = {
+    address: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
+    abi: CRONOS_LIQ_SINGLE_TOKEN_ABI
 }
 
 export const LIQ_BNB_CONTRACT = {
@@ -36,7 +44,7 @@ export const LIQ_ETH_CONTRACT = {
 
 export const LIQ_CRO_CONTRACT = {
     address: '0x3295007761C290741B6b363b86dF9ba3467F0754',
-    abi: LIQ_CRO_LP_TOKEN_ABI
+    abi: CRONOS_LIQ_CRO_LP_TOKEN_ABI
 }
 
 export const LIQ_MATIC_CONTRACT = {
@@ -184,6 +192,7 @@ export const ETH_CONTRACT_LIST = [
 /** LIQUIDUS CRONOS CONTRACT LIST */
 export const CRONOS_CONTRACT_LIST = [
     {
+        contractUniqueName: 'CronaSwap LIQ-COR No Vesting Pool',
         address: '0x1c7fDE0a9619bC81b23cAEF6992288BA5547a34F',
         lpSwapToken: '0x3295007761C290741B6b363b86dF9ba3467F0754',
         rewardToken: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
@@ -198,11 +207,12 @@ export const CRONOS_CONTRACT_LIST = [
         linkName: 'LIQ-CRO LP'
     },
     {
+        contractUniqueName: 'Cronos LIQ Single Token No Vesting Pool',
         address: '0xc7981767f644C7F8e483DAbDc413e8a371b83079',
         stakedToken: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
         rewardToken: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
         abi: FarmContractForSingleToken,
-        tokenAbi: LIQ_CRO_LP_TOKEN_ABI,
+        tokenAbi: CRONOS_LIQ_CRO_LP_TOKEN_ABI,
         vestingPeriodInMonths: 3,
         type: 'LIQ',
         name: 'LIQ - Single Token',
@@ -215,6 +225,7 @@ export const CRONOS_CONTRACT_LIST = [
 /** LIQUIDUS MATIC CONTRACT LIST */
 export const MATIC_CONTRACT_LIST = [
     {
+        contractUniqueName: 'Quickswap LIQ-MATIC 1 Month Pool',
         address: '0xc7981767f644c7f8e483dabdc413e8a371b83079',
         lpSwapToken: '0x2F5a5E6FF15B9B342e6292e2F179e7199f88922F',
         rewardToken: '0x4036f3d9c45a20f44f0b8B85dD6CA33005fF9654',

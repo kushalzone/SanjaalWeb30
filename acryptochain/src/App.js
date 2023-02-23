@@ -16,7 +16,7 @@ import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { BSC_CONTRACT_LIST, BSC_LIQ_TOKEN_CONTRACT } from './constants/liq_app_constants';
+import { BSC_CONTRACT_LIST, BSC_LIQ_SINGLE_TOKEN_CONTRACT } from './constants/liq_app_constants';
 import RewardsDetail from './components/RewardsDetail';
 
 const App = () => {
@@ -45,7 +45,7 @@ const App = () => {
     );
 
     /** WAllet specific operations */
-    const tokenContract = new web3Object.eth.Contract(BSC_LIQ_TOKEN_CONTRACT.abi, BSC_LIQ_TOKEN_CONTRACT.address);
+    const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
     getBalanceOf(tokenContract, walletAddress, setBalanceOf)
     setLoaded(true)
 
