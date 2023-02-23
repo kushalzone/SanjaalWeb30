@@ -1,6 +1,7 @@
 /**
  * @author Kushal Paudyal
  * Written For Sanjaal Corps
+ * https://www.acryptochan.com
  * @since Februrary 2023
  * 
  * Use it at your own risk. Author provides no liablity. 
