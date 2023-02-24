@@ -9,6 +9,7 @@ import Paper from '@mui/material/Paper';
 
 function RewardsDetail(data) {
 
+    //Sums up all the harvest ready tokens for summary display
     const totalHarvestReadyTokens = data.reduce((acc, item) => {
         return acc + parseFloat(item.harvestReadyTokens || 0);
     }, 0);
@@ -22,7 +23,7 @@ function RewardsDetail(data) {
                 <TableHead>
                     <TableRow>
                         {/* <TableCell>Chain</TableCell> */}
-                        {/* <TableCell>Wallet Address</TableCell> */}
+                        <TableCell>Wallet Address</TableCell>
                         <TableCell>Pool Name</TableCell>
                         <TableCell>Harvest Ready Tokens</TableCell>
                         <TableCell>Amount</TableCell>
@@ -36,7 +37,7 @@ function RewardsDetail(data) {
                         return (
                             <TableRow key={index}>
                                 {/* <TableCell>{item.chain || '-'}</TableCell> */}
-                                {/* <TableCell>{item.walletAddress || '-'}</TableCell> */}
+                                <TableCell>{String(item.walletAddress).substring(1,15) || '-'}</TableCell>
                                 <TableCell>{item.poolName || '-'}</TableCell>
                                 <TableCell>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</TableCell>
                                 <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
