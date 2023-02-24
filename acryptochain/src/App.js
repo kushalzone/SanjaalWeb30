@@ -17,37 +17,57 @@ import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { BSC_CONTRACT_LIST, BSC_LIQ_SINGLE_TOKEN_CONTRACT, MATIC_CONTRACT_LIST } from './constants/liq_app_constants';
+import {
+  BSC_CONTRACT_LIST,
+  BSC_LIQ_SINGLE_TOKEN_CONTRACT,
+  MATIC_CONTRACT_LIST,
+  CRONOS_CONTRACT_LIST
+} from './constants/liq_app_constants';
+
 import RewardsDetail from './components/RewardsDetail';
+import WalletBalance from './components/WalletBalance';
 
 const App = () => {
-  const [walletAddress, setWalletAddress] = useState('');
+  const [walletAddresses, setWalletAddresses] = useState('');
   const [loaded, setLoaded] = useState(false);
 
   //BSC Contracts
-  const [balanceOf, setBalanceOf] = useState('0.0');
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
+  const [balanceOf, setBalanceOf] = useState([]);
 
   const handleWalletInputChange = event => {
-    setWalletAddress(event.target.value);
+    setWalletAddresses(event.target.value);
     setPoolHarvestResult(null)
+    setBalanceOf(null)
   };
 
   /** Pool Specific Operations */
   const handleWalletSubmit = async event => {
     event.preventDefault();
-    
-    setPoolHarvestResult([{}])
-    const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
-    BSC_CONTRACT_LIST.forEach(c => {
-      let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-      getharvestReadyTokens(c.contractUniqueName, "BSC", web3Contract, walletAddress, setPoolHarvestResult)
-    }
-    );
+    setPoolHarvestResult([])
+    setBalanceOf([])
 
-    /** WAllet specific operations */
-    const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
-    getBalanceOf(tokenContract, walletAddress, setBalanceOf)
+    const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
+    const separator = /[;,]/;
+    const walletAddressList = walletAddresses.split(separator);
+
+    /* Wallet Address field can accept multiple addresses, so split it and runt he logic for each address*/
+    walletAddressList.forEach(address => {
+      BSC_CONTRACT_LIST.forEach(c => {
+        let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
+        getharvestReadyTokens(c.contractUniqueName, "BSC", web3Contract, address, setPoolHarvestResult)
+      }
+      );
+
+      /** WAllet specific operations: DO THIS IN A LOOP */
+      const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
+      getBalanceOf(tokenContract, address, setBalanceOf)
+
+    });
+
+
+
+
     setLoaded(true)
 
   };
@@ -59,28 +79,30 @@ const App = () => {
         <form onSubmit={handleWalletSubmit}>
           <h1>Liquidus Farming</h1>
           <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
-          <LIQTokenInfo/>
+          <LIQTokenInfo />
           <label>
-            <h4>Enter wallet address:</h4>
-            <Input value={walletAddress} onChange={handleWalletInputChange} fullWidth={true} />
+            <h4>Enter single or comma separated wallet addresses:</h4>
+            <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} />
           </label>
           <p />
           <Button variant="contained" type="submit">Find Pending Reward</Button>
         </form>
       </div>
 
+      <hr />
       {loaded && poolHarvestResult && <h4>REWARDS DETAILS : BSC POOL</h4>}
-      {loaded && balanceOf && <h4><font color="#007600">Wallet Balance: {balanceOf}</font></h4>}
+      {loaded && balanceOf && WalletBalance(balanceOf)}
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult)}
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <hr />
       <span><em>...Developed by Kushal Paudyal for Sanjaal Corps...</em></span>
     </Container>
 
   );
 };
 
-async function getharvestReadyTokens(poolName, chain, contract, walletAddress, setFunction) {
+async function getharvestReadyTokens(poolName, chain, contract, walletAddress, setStateFunction) {
   try {
     const pendingReward = await contract.methods.pendingReward(walletAddress).call();
     const userInfo = await contract.methods.userInfo(walletAddress).call();
@@ -97,21 +119,28 @@ async function getharvestReadyTokens(poolName, chain, contract, walletAddress, s
       harvestReadyTokens: pendingRewardEther,
       userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate }
     };
-    setFunction(prevState => [...prevState, poolHarvestResult]);
+    setStateFunction(prevState => [...prevState, poolHarvestResult]);
   } catch (error) {
     console.error(error);
   }
 }
 
-function getBalanceOf(contract, walletAddress, setFunction) {
-  contract.methods.balanceOf(walletAddress).call((error, result) => {
-    if (error) {
-      console.error(error);
-    } else {
-      const rewardsEther = Web3.utils.fromWei(result, 'ether');
-      setFunction(parseFloat(rewardsEther).toFixed(2));
+async function getBalanceOf(contract, walletAddress, setStateFunction) {
+  try {
+    const result = await contract.methods.balanceOf(walletAddress).call()
+    const rewardsEther = Web3.utils.fromWei(result, 'ether');
+
+    const balance = {
+      wallet: walletAddress,
+      balance: rewardsEther
     }
-  });
+    console.log(balance)
+    setStateFunction(prevState => [...prevState, balance]);
+
+  } catch (error) {
+    console.error(error)
+  }
+
 }
 
 export default App;

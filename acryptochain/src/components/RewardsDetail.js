@@ -17,7 +17,7 @@ function RewardsDetail(data) {
 
     return (
         <div>
-            <h4><font color="red">Total Harvest Ready Tokens: {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
+            <h4><font color="#007600">Total Unharvested Rewards (All Wallets): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }}>
                 <TableHead>
@@ -37,7 +37,7 @@ function RewardsDetail(data) {
                         return (
                             <TableRow key={index}>
                                 {/* <TableCell>{item.chain || '-'}</TableCell> */}
-                                <TableCell>{String(item.walletAddress).substring(1,15) || '-'}</TableCell>
+                                <TableCell>{String(item.walletAddress).substring(0,20) +'...' || '-'}</TableCell>
                                 <TableCell>{item.poolName || '-'}</TableCell>
                                 <TableCell>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</TableCell>
                                 <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
