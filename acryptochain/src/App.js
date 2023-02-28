@@ -77,7 +77,7 @@ const App = () => {
 
       <div>
         <form onSubmit={handleWalletSubmit}>
-          <h1>Liquidus Farming</h1>
+          <h1>DeFi Tools</h1>
           <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
           <LIQTokenInfo />
           <label>
