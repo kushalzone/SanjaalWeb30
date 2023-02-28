@@ -1,5 +1,7 @@
+import { bscNet } from "../constants/networks";
+
 export function tokenInfoTable(address, name, symbol, totalSupply, decimals, owner) {
   return <div>
-    Symbol: <b>{symbol}</b> | Name: <b>{name}</b> | Total Supply: <b>{totalSupply}</b> | Decimals: <b>{decimals}</b> | Address: <b>{String(address).substring(0, 10) + '...'}</b> | Owner: <b>{String(owner).substring(0, 10) + '...'}</b>
+    Symbol: {symbol} | Name: {name} | Total Supply: {totalSupply} | Decimals: {decimals} | Owner: {String(owner).substring(0, 10) + '...'} | Address: <a href={bscNet[0].addressExplorerPrefixURL + address} target='_blank' rel='noreferrer'>{address}</a> 
   </div>
 }

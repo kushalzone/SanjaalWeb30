@@ -11,6 +11,7 @@ import POLYGON_LIQ_MATIC_LP_TOKEN_ABI from '../abis/matic/polygon_liq_matic_lp_a
 
 import ETH_LIQ_ETH_LP_TOKEN_ABI from '../abis/eth/eth_liq_eth_lp_abi.json'
 import ETh_LIQ_SINGLE_TOKEN_ABI from '../abis/eth/eth_liq_token_abi.json'
+import { bscNet } from './networks';
 
 
 const FarmContractForSingleToken = "" //DELETE AND FIX
@@ -72,6 +73,7 @@ export const BSC_CONTRACT_LIST = [
         title: 'Biswap',
         contractLink: 'https://bscscan.com/address/0x787fa31b4d75E45c1B83649510a588D580Eb4f57',
         link: 'https://exchange.biswap.org/#/add/ETH/',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: "Pancakeswap LIQ-BNB 1 Month Pool",
@@ -86,6 +88,7 @@ export const BSC_CONTRACT_LIST = [
         title: 'PancakeSwap',
         contractLink: 'https://bscscan.com/address/0xb944b748A35B6dFFDd924bffD85910F968943a72',
         link: 'https://pancakeswap.finance/add/BNB/',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: "Apeswap LIQ-BUSD 1 Month Pool",
@@ -100,6 +103,7 @@ export const BSC_CONTRACT_LIST = [
         title: 'ApeSwap',
         contractLink: 'https://bscscan.com/address/0x7A0D4A0D88994E73a9eDCd79Ecad9097aCb1d937',
         link: 'https://app.apeswap.finance/add/',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: "Biswap LIQ-BNB 3 Months Pool",
@@ -114,6 +118,7 @@ export const BSC_CONTRACT_LIST = [
         title: 'Biswap',
         contractLink: 'https://bscscan.com/address/0x19646186D7364b8c1Fb60f9772d2B186EA68983D',
         link: 'https://exchange.biswap.org/#/add/ETH/',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: "LIQ Single Token 1 Month Pool",
@@ -128,9 +133,10 @@ export const BSC_CONTRACT_LIST = [
         multiplier: 10,
         contractLink: 'https://bscscan.com/address/0xbeBCd3aD501Fc425a71CDC7593CEDeA324176E92',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
-        contractUniqueName: "LIQ Single Token 3 Month Pool",
+        contractUniqueName: "LIQ Single Token 3 Months Pool",
         address: '0x5CcD597728b1F088bFB749D9a9798ED0C6e2211C',
         stakedToken: '0xc7981767f644c7f8e483dabdc413e8a371b83079',
         rewardToken: '0xc7981767f644c7f8e483dabdc413e8a371b83079',
@@ -142,6 +148,7 @@ export const BSC_CONTRACT_LIST = [
         multiplier: 15,
         contractLink: 'https://bscscan.com/address/0x5CcD597728b1F088bFB749D9a9798ED0C6e2211C',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: "LIQ Single Token 6 Months Pool",
@@ -156,6 +163,7 @@ export const BSC_CONTRACT_LIST = [
         multiplier: 15,
         contractLink: 'https://bscscan.com/address/0xAb97B17B1547A8776299D4934fF5C8c7b247db6A',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     },
     {
         contractUniqueName: 'LIQ Single Token 12 Months Pool',
@@ -170,6 +178,7 @@ export const BSC_CONTRACT_LIST = [
         multiplier: 25,
         contractLink: 'https://bscscan.com/address/0xc6AEd0e5B81383Fd8537f4f805492732BDf8efC0',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
+        addressExplorer: bscNet[0].addressExplorerPrefixURL
     }
 ];
 

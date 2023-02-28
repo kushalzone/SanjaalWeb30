@@ -1,3 +1,8 @@
+Release 0.2 | 2023 FEB 28
+- Added links to explorer for the wallets
+- Added links to contracts for the contract address
+- Pools that have no deposits are hidden from the view 
+
 Release 0.1 | 2023 FEB 27
 - Initial release of DeFi Tools
 - Ready Only Operation - only wallet address needed

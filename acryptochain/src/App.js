@@ -25,7 +25,6 @@ import {
 } from './constants/liq_app_constants';
 
 import RewardsDetail from './components/RewardsDetail';
-import WalletBalance from './components/WalletBalance';
 
 const App = () => {
   const [walletAddresses, setWalletAddresses] = useState('');
@@ -55,7 +54,7 @@ const App = () => {
     walletAddressList.forEach(address => {
       BSC_CONTRACT_LIST.forEach(c => {
         let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-        getharvestReadyTokens(c.contractUniqueName, "BSC", web3Contract, address, setPoolHarvestResult)
+        getharvestReadyTokens(c, "BSC", web3Contract, address, setPoolHarvestResult)
       }
       );
 
@@ -75,24 +74,22 @@ const App = () => {
       <h1>DeFi Tools</h1>
       <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
       <LIQTokenInfo />
-
-        <form onSubmit={handleWalletSubmit}>
-          <label>
-            <h4>Enter single or comma separated wallet addresses:</h4>
-            <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} />
-          </label>
-          <p />
-          <Button variant="contained" type="submit">Find Pending Reward</Button>
-        </form>
+      <br />
+      <hr />
+      <form onSubmit={handleWalletSubmit}>
+        <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses' />
+        <p />
+        <Button variant="contained" type="submit">Find Pending Reward</Button>
+      </form>
 
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf)}
-      
+
     </Container>
 
   );
 };
 
-async function getharvestReadyTokens(poolName, chain, contract, walletAddress, setStateFunction) {
+async function getharvestReadyTokens(contractObj, chain, contract, walletAddress, setStateFunction) {
   try {
     const pendingReward = await contract.methods.pendingReward(walletAddress).call();
     const userInfo = await contract.methods.userInfo(walletAddress).call();
@@ -105,9 +102,11 @@ async function getharvestReadyTokens(poolName, chain, contract, walletAddress, s
     const poolHarvestResult = {
       chain: chain,
       walletAddress: walletAddress,
-      poolName: poolName,
+      poolName: contractObj.contractUniqueName,
       harvestReadyTokens: pendingRewardEther,
-      userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate }
+      userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate },
+      contractLink: contractObj.contractLink,
+      addressExplorer: contractObj.addressExplorer
     };
     setStateFunction(prevState => [...prevState, poolHarvestResult]);
   } catch (error) {

@@ -29,6 +29,7 @@ export const bscNet = [{
     },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
+    addressExplorerPrefixURL: 'https://bscscan.com/address/'
 }];
 
 /**
