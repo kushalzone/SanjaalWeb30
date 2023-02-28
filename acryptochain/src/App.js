@@ -65,9 +65,6 @@ const App = () => {
 
     });
 
-
-
-
     setLoaded(true)
 
   };
@@ -75,11 +72,11 @@ const App = () => {
   return (
     <Container>
 
-      <div>
+      <h1>DeFi Tools</h1>
+      <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
+      <LIQTokenInfo />
+
         <form onSubmit={handleWalletSubmit}>
-          <h1>DeFi Tools</h1>
-          <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
-          <LIQTokenInfo />
           <label>
             <h4>Enter single or comma separated wallet addresses:</h4>
             <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} />
@@ -87,16 +84,9 @@ const App = () => {
           <p />
           <Button variant="contained" type="submit">Find Pending Reward</Button>
         </form>
-      </div>
 
-      <hr />
-      {loaded && poolHarvestResult && <h4>REWARDS DETAILS : BSC POOL</h4>}
-      {loaded && balanceOf && WalletBalance(balanceOf)}
-      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult)}
-      <br />
-      <br />
-      <hr />
-      <span><em>...Developed by Kushal Paudyal for Sanjaal Corps...</em></span>
+      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf)}
+      
     </Container>
 
   );
