@@ -6,14 +6,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 
 import WalletBalance from './WalletBalance';
-import { bscNet } from '../constants/networks';
+import Footer from './Footer';
 
 function RewardsDetail(data, balance) {
 
@@ -34,7 +29,7 @@ function RewardsDetail(data, balance) {
         <div>
             {WalletBalance(balance)}
             <h4><font color="#007600">Total Unharvested Rewards (All Wallets): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
-            <h4>REWARDS DETAILS</h4>
+            <h2>REWARDS DETAILS</h2>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white"}}>
                     <TableHead>
@@ -66,21 +61,7 @@ function RewardsDetail(data, balance) {
                 </Table>
             </TableContainer>
             <p><font color="red">** - This table only displays farms / pools in which there was a deposit made by the wallet(s)</font></p>
-
-            <Card>
-                <CardContent>
-                    <Typography gutterBottom variant="h5" component="div">
-                        About
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        This tool is developed by Kushal Paudyal for Sanjaal Corps.
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small" href='https://github.com/sanjaalcorps/SanjaalWeb30/blob/master/acryptochain/ReleaseNotes.MD'>Release Notes</Button>
-                </CardActions>
-            </Card>
-
+           <Footer/>
         </div>
     );
 }

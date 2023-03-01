@@ -14,6 +14,7 @@ export const ethNet = [{
         'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
     ],
     blockExplorerUrls: ['https://etherscan.io'],
+    addressExplorerPrefixURL: 'https://etherscan.io/address/'
 }];
 
 /**
@@ -43,11 +44,12 @@ export const cronosNet = [{
         symbol: 'CRO',
     },
     rpcUrls: ['https://evm-cronos.crypto.org/'],
-    blockExplorerUrls: ['https://cronos.crypto.org/explorer/'],
+    blockExplorerUrls: ['https://cronoscan.com/','https://cronos.crypto.org/explorer/'],
+    addressExplorerPrefixURL: 'https://cronoscan.com/address/'
 }];
 
 /**
- * Polygon / MAtic Network
+ * Polygon / Matic Network
  */
 export const polygonNet = [{
     chainId: '137',
@@ -61,4 +63,5 @@ export const polygonNet = [{
         'https://polygon-rpc.com/', 
         'https://rpc-mainnet.maticvigil.com'],
     blockExplorerUrls: ['https://polygonscan.com/address/'],
+    addressExplorerPrefixURL: 'https://polygonscan.com/address/'
 }];

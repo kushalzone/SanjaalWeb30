@@ -18,17 +18,16 @@ import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
 import {
-  BSC_CONTRACT_LIST,
-  BSC_LIQ_SINGLE_TOKEN_CONTRACT,
-  MATIC_CONTRACT_LIST,
-  CRONOS_CONTRACT_LIST
+ LIQ_CONTRACT_LIST_ALL, BSC_LIQ_SINGLE_TOKEN_CONTRACT, 
 } from './constants/liq_app_constants';
 
 import RewardsDetail from './components/RewardsDetail';
+import { selectProject } from './components/ProjectSelection';
 
 const App = () => {
   const [walletAddresses, setWalletAddresses] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [selectedProject, setSelectedProject] = useState('');
 
   //BSC Contracts
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
@@ -36,6 +35,12 @@ const App = () => {
 
   const handleWalletInputChange = event => {
     setWalletAddresses(event.target.value);
+    setPoolHarvestResult(null)
+    setBalanceOf(null)
+  };
+
+  const handleProjectChange = event => {
+    setSelectedProject(event.target.value);
     setPoolHarvestResult(null)
     setBalanceOf(null)
   };
@@ -52,7 +57,7 @@ const App = () => {
 
     /* Wallet Address field can accept multiple addresses, so split it and runt he logic for each address*/
     walletAddressList.forEach(address => {
-      BSC_CONTRACT_LIST.forEach(c => {
+      LIQ_CONTRACT_LIST_ALL[0].forEach(c => {
         let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
         getharvestReadyTokens(c, "BSC", web3Contract, address, setPoolHarvestResult)
       }
@@ -69,13 +74,18 @@ const App = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ border: 1, my:10, pb: 10, background:'#FFFFFF' }}>
 
-      <h1>DeFi Tools</h1>
-      <h4><font color="#007600">BNB Price: $<BNBPrice /> | LIQ Price: $<LiquidusPrice /></font></h4>
-      <LIQTokenInfo />
+      <h2>DeFi Tools | <font color="#007600">BNB Price: $<BNBPrice /></font></h2>
+      {selectProject(selectedProject, handleProjectChange)}
+
+      {selectedProject === 'liq' &&
+        <div><font color="#007600"><h4>LIQ Price: $<LiquidusPrice /></h4>
+          <LIQTokenInfo /></font>
+        </div>}
+
       <br />
-      <hr />
+      
       <form onSubmit={handleWalletSubmit}>
         <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses' />
         <p />
