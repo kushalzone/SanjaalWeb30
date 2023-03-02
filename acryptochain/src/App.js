@@ -51,19 +51,23 @@ const App = () => {
     setPoolHarvestResult([])
     setBalanceOf([])
 
-    const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
     const separator = /[;,]/;
     const walletAddressList = walletAddresses.split(separator);
 
     /* Wallet Address field can accept multiple addresses, so split it and runt he logic for each address*/
     walletAddressList.forEach(address => {
       LIQ_CONTRACT_LIST_ALL[0].forEach(c => {
+
+        console.log("Contract: "  + c.provider)
+        const web3Object = new Web3(new Web3.providers.HttpProvider(c.provider));
         let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-        getharvestReadyTokens(c, "BSC", web3Contract, address, setPoolHarvestResult)
+        getharvestReadyTokens(c, c.chain, web3Contract, address, setPoolHarvestResult)
       }
       );
 
-      /** WAllet specific operations: DO THIS IN A LOOP */
+      //TODO: Chain Specific
+      const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
+          /** WAllet specific operations: DO THIS IN A LOOP */
       const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
       getBalanceOf(tokenContract, address, setBalanceOf)
 
