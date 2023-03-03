@@ -4,7 +4,7 @@
  * https://www.acryptochan.com
  * @since Februrary 2023
  * 
- * Use it at your own risk. Author provides no liablity. 
+ * Use it at your own risk. Author provides no liablity of any sort.
  */
 import { useState } from 'react';
 import * as React from 'react';
@@ -17,22 +17,23 @@ import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import {
- LIQ_CONTRACT_LIST_ALL, BSC_LIQ_SINGLE_TOKEN_CONTRACT, 
-} from './constants/liq_app_constants';
+import { PROJECT_CONTRACT_LIST_ALL_CHAINS, BSC_LIQ_SINGLE_TOKEN_CONTRACT } from './constants/liq_app_constants';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelection';
 
 const App = () => {
+  //User Inputs on UI
   const [walletAddresses, setWalletAddresses] = useState('');
-  const [loaded, setLoaded] = useState(false);
   const [selectedProject, setSelectedProject] = useState('');
-
-  //BSC Contracts
+  
+  //API call results
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
   const [balanceOf, setBalanceOf] = useState([]);
-
+  
+  //Data Loaded Flag
+  const [loaded, setLoaded] = useState(false);
+  
   const handleWalletInputChange = event => {
     setWalletAddresses(event.target.value);
     setPoolHarvestResult(null)
@@ -51,27 +52,24 @@ const App = () => {
     setPoolHarvestResult([])
     setBalanceOf([])
 
-    const separator = /[;,]/;
+    const separator = /[;,\n\r\t]/;
     const walletAddressList = walletAddresses.split(separator);
 
-    /* Wallet Address field can accept multiple addresses, so split it and runt he logic for each address*/
+    /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
     walletAddressList.forEach(address => {
-      LIQ_CONTRACT_LIST_ALL.forEach(contract => {
-        contract.forEach(c => {
-          console.log("Contract: "  + c.provider)
-          const web3Object = new Web3(new Web3.providers.HttpProvider(c.provider));
+      PROJECT_CONTRACT_LIST_ALL_CHAINS.forEach(chainContracts => {
+        chainContracts.contractList.forEach(c => {
+          const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
           let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-          getharvestReadyTokens(c, c.chain, web3Contract, address, setPoolHarvestResult)
-        }
-        );
+          getharvestReadyTokens(c, chainContracts.chain, web3Contract, address, setPoolHarvestResult)
+        });
 
-      }
-      );
-      
+      });
+
 
       //TODO: Chain Specific
       const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
-          /** WAllet specific operations: DO THIS IN A LOOP */
+      /** WAllet specific operations: DO THIS IN A LOOP */
       const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
       getBalanceOf(tokenContract, address, setBalanceOf)
 
@@ -82,7 +80,7 @@ const App = () => {
   };
 
   return (
-    <Container sx={{ border: 1, my:10, pb: 10, background:'#FFFFFF' }}>
+    <Container sx={{ border: 1, my: 10, pb: 10, background: '#FFFFFF' }}>
 
       <h2>DeFi Tools | <font color="#007600">BNB Price: $<BNBPrice /></font></h2>
       {selectProject(selectedProject, handleProjectChange)}
@@ -93,12 +91,14 @@ const App = () => {
         </div>}
 
       <br />
-      
-      <form onSubmit={handleWalletSubmit}>
-        <Input value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses' />
-        <p />
-        <Button variant="contained" type="submit">Find Pending Reward</Button>
-      </form>
+
+      {selectedProject &&
+        <form onSubmit={handleWalletSubmit}>
+          <Input label="Outlined secondary" value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses to find pending rewards' color="secondary"/>
+          <p />
+          <Button variant="contained" type="submit">Find Pending Reward</Button>
+        </form>
+      }
 
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf)}
 

@@ -1,3 +1,11 @@
+/**
+ * @author Kushal Paudyal
+ * Written For Sanjaal Corps
+ * https://www.acryptochan.com
+ * @since Februrary 2023
+ * 
+ * Use it at your own risk. Author provides no liablity of any sort.
+ */
 import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -6,9 +14,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import StreamIcon from '@mui/icons-material/Stream';
 import WalletBalance from './WalletBalance';
 import Footer from './Footer';
+import LinkIcon from '@mui/icons-material/Link';
 
 function RewardsDetail(data, balance) {
 
@@ -28,10 +37,10 @@ function RewardsDetail(data, balance) {
     return (
         <div>
             {WalletBalance(balance)}
-            <h4><font color="#007600">Total Unharvested Rewards (All Wallets): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
+            <h4><font color="#007600">Pending Rewards (All Wallets , All Chains): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
             <h2>REWARDS DETAILS</h2>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white"}}>
+                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white", border:0.5, borderStyle:'dashed'}}>
                     <TableHead>
                         <TableRow sx={{ background: '#1976d2' }}>
                             <TableCell sx={{ color: 'white' }}>Chain</TableCell>
@@ -47,9 +56,9 @@ function RewardsDetail(data, balance) {
                         {reducedData.map((item, index) => {
                             return (
                                 <TableRow key={index}>
-                                    <TableCell>{item.chain || '-'}</TableCell>
-                                    <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 20) + '...' || '-'}</a></TableCell>
-                                    <TableCell><font color="#007600"><em>{item.poolName || '-'}</em></font><hr/><a href={item.contractLink} target='_blank' rel='noreferrer'>View Contract</a></TableCell>
+                                    <TableCell><StreamIcon fontSize="small" color="primary"/>&nbsp;{item.chain || '-'}</TableCell>
+                                    <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
+                                    <TableCell><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon fontSize='small'/></a>&nbsp;<font color="#007600">{String(item.poolName).toUpperCase() || '-'}</font></TableCell>
                                     <TableCell>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</TableCell>
                                     <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
                                     <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell>
@@ -60,7 +69,7 @@ function RewardsDetail(data, balance) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <p><font color="red">** - This table only displays farms / pools in which there was a deposit made by the wallet(s)</font></p>
+            <p><font color="red">** This table only displays farms / pools in which there was a deposit made by the wallet(s)</font></p>
            <Footer/>
         </div>
     );

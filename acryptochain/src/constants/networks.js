@@ -4,6 +4,7 @@
 export const ethNet = [{
     chainId: '0x1',
     chainName: 'Ethereum Mainnet',
+    chainNameShort: 'ETH',
     nativeCurrency: {
         name: 'ETH',
         symbol: 'ETH',
@@ -23,6 +24,7 @@ export const ethNet = [{
 export const bscNet = [{
     chainId: '0x38',
     chainName: 'Binance Smart Chain',
+    chainNameShort: 'BSC',
     nativeCurrency: {
         name: 'BNB',
         symbol: 'BNB',
@@ -39,6 +41,7 @@ export const bscNet = [{
 export const cronosNet = [{
     chainId: '0x19',
     chainName: 'Cronos',
+    chainNameShort: 'CRO',
     nativeCurrency: {
         name: 'CRO',
         symbol: 'CRO',
@@ -54,6 +57,7 @@ export const cronosNet = [{
 export const polygonNet = [{
     chainId: '137',
     chainName: 'Polygon',
+    chainNameShort: 'MATIC',
     nativeCurrency: {
         name: 'MATIC',
         symbol: 'MATIC',

@@ -48,7 +48,7 @@ export const LIQTokenInfo = () => {
                 const decimals = await tokenContract.methods.decimals().call();
 
                 const totalSupplyEther = Web3.utils.fromWei(totalSupply, 'ether');
-               
+                
                 const result = tokenInfoTable(BSC_LIQ_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner)
 
                 setTokenInfo(result)
