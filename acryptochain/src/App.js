@@ -56,14 +56,18 @@ const App = () => {
 
     /* Wallet Address field can accept multiple addresses, so split it and runt he logic for each address*/
     walletAddressList.forEach(address => {
-      LIQ_CONTRACT_LIST_ALL[0].forEach(c => {
+      LIQ_CONTRACT_LIST_ALL.forEach(contract => {
+        contract.forEach(c => {
+          console.log("Contract: "  + c.provider)
+          const web3Object = new Web3(new Web3.providers.HttpProvider(c.provider));
+          let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
+          getharvestReadyTokens(c, c.chain, web3Contract, address, setPoolHarvestResult)
+        }
+        );
 
-        console.log("Contract: "  + c.provider)
-        const web3Object = new Web3(new Web3.providers.HttpProvider(c.provider));
-        let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-        getharvestReadyTokens(c, c.chain, web3Contract, address, setPoolHarvestResult)
       }
       );
+      
 
       //TODO: Chain Specific
       const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));

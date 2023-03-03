@@ -15,10 +15,6 @@ import ETh_LIQ_SINGLE_TOKEN_ABI from '../abis/eth/eth_liq_token_abi.json'
 import { bscNet, polygonNet } from './networks';
 import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_PROVIDER } from './NetworkProviders';
 
-
-//const FarmContractForSingleToken = "" //DELETE AND FIX
-//const FarmContractvestingPeriodInMonths___Cronos = "" //DELETE AND FIX
-
 export const CONTRACT_FOR_BNB = {
     address: '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16',
     abi: BSC_BNB_ABI
