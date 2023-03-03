@@ -16,7 +16,7 @@ export default class Footer extends PureComponent {
                     </Typography>
                     <Button size="small" href='https://github.com/sanjaalcorps/SanjaalWeb30/blob/master/ReleaseNotes.MD'>Release Notes</Button>
                     <Button size="small" href='https://github.com/sanjaalcorps/SanjaalWeb30/'>Source Code</Button>
-                    
+                    {'[Version: 0.3, Released on : March 2nd 2023]'}
                 </CardContent>
             </Card>
         )

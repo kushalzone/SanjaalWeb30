@@ -1,3 +1,9 @@
+Release 0.3 | 2023 MAR 02
+- Supports multiple chains (ETH/Polygon/Cronos)
+- Not need to switch Networks
+- Supports Liquidus Pools on ETH/Polygon/Cronos in addition to BSC
+- Project Selection Dropdown added (For supporting multiple projects in the future)
+
 Release 0.2 | 2023 FEB 28
 - Added links to explorer for the wallets
 - Added links to contracts for the contract address
