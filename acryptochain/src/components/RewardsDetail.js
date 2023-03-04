@@ -19,7 +19,7 @@ import WalletBalance from './WalletBalance';
 import Footer from './Footer';
 import LinkIcon from '@mui/icons-material/Link';
 
-function RewardsDetail(data, balance) {
+function RewardsDetail(data, balance, balanceErrors) {
 
     //Sums up all the harvest ready tokens for summary display
     const totalHarvestReadyTokens = data.reduce((acc, item) => {
@@ -36,7 +36,7 @@ function RewardsDetail(data, balance) {
 
     return (
         <div>
-            {WalletBalance(balance)}
+            {WalletBalance(balance, balanceErrors)}
             <h4><font color="#007600">Pending Rewards (All Wallets , All Chains): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
             <h2>REWARDS DETAILS</h2>
             <TableContainer component={Paper}>

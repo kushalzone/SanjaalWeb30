@@ -46,7 +46,7 @@ export const cronosNet = [{
         name: 'CRO',
         symbol: 'CRO',
     },
-    rpcUrls: ['https://evm-cronos.crypto.org/'],
+    rpcUrls: ['https://evm.cronos.org/'],
     blockExplorerUrls: ['https://cronoscan.com/','https://cronos.crypto.org/explorer/'],
     addressExplorerPrefixURL: 'https://cronoscan.com/address/'
 }];

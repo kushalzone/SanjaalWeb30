@@ -10,7 +10,6 @@ import { useState } from 'react';
 import * as React from 'react';
 import Web3 from 'web3';
 import './App.css';
-import * as providers from './constants/NetworkProviders'
 
 import Button from '@mui/material/Button';
 import Input from '@mui/material/Input';
@@ -30,48 +29,63 @@ const App = () => {
   //API call results
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
   const [balanceOf, setBalanceOf] = useState([]);
+  const [balanceCalcuationErrors, setBalanceCalculationErros] = useState([]);
   
   //Data Loaded Flag
   const [loaded, setLoaded] = useState(false);
   
   const handleWalletInputChange = event => {
     setWalletAddresses(event.target.value);
-    setPoolHarvestResult(null)
-    setBalanceOf(null)
+    resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros);
   };
 
   const handleProjectChange = event => {
     setSelectedProject(event.target.value);
-    setPoolHarvestResult(null)
-    setBalanceOf(null)
+    resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros);
   };
+
+  
+function resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros) {
+  setPoolHarvestResult(null);
+  setBalanceOf(null);
+  setBalanceCalculationErros(null);
+}
+
 
   /** Pool Specific Operations */
   const handleWalletSubmit = async event => {
     event.preventDefault();
     setPoolHarvestResult([])
     setBalanceOf([])
+    setBalanceCalculationErros([])
 
     const separator = /[;,\n\r\t]/;
+    
     const walletAddressList = walletAddresses.split(separator);
 
     /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
     walletAddressList.forEach(address => {
       PROJECT_CONTRACT_LIST_ALL_CHAINS.forEach(chainContracts => {
+        
+        
+        //Loop through the pools on each chain
         chainContracts.contractList.forEach(c => {
           const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
           let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-          getharvestReadyTokens(c, chainContracts.chain, web3Contract, address, setPoolHarvestResult)
+          getharvestReadyTokens(c, chainContracts.chain, web3Contract, String(address).trim(), setPoolHarvestResult)
         });
+
+      //Find total balance by Chain
+      const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
+      const tokenContract = new web3Object.eth.Contract(chainContracts.singleTokenAbi, chainContracts.singleTokenAddress);
+      console.log("Chain: " + chainContracts.chain + " Address: " +  chainContracts.singleTokenAddress)
+      getBalanceOf(chainContracts.chain, tokenContract, address, setBalanceOf, setBalanceCalculationErros)
+
+
 
       });
 
 
-      //TODO: Chain Specific
-      const web3Object = new Web3(new Web3.providers.HttpProvider(providers.BSC_NODE_PROVIDER));
-      /** WAllet specific operations: DO THIS IN A LOOP */
-      const tokenContract = new web3Object.eth.Contract(BSC_LIQ_SINGLE_TOKEN_CONTRACT.abi, BSC_LIQ_SINGLE_TOKEN_CONTRACT.address);
-      getBalanceOf(tokenContract, address, setBalanceOf)
 
     });
 
@@ -100,7 +114,9 @@ const App = () => {
         </form>
       }
 
-      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf)}
+      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors)}
+
+      {/* {JSON.stringify(balanceOf)} */}
 
     </Container>
 
@@ -132,12 +148,14 @@ async function getharvestReadyTokens(contractObj, chain, contract, walletAddress
   }
 }
 
-async function getBalanceOf(contract, walletAddress, setStateFunction) {
+async function getBalanceOf(chain, contract, walletAddress, setStateFunction, setErrorFunction) {
   try {
-    const result = await contract.methods.balanceOf(walletAddress).call()
-    const rewardsEther = Web3.utils.fromWei(result, 'ether');
 
+    const result = await contract.methods.balanceOf(walletAddress).call()
+    console.log("getBalanceOf Result: " + JSON.stringify(result))
+    const rewardsEther = Web3.utils.fromWei(result, 'ether');
     const balance = {
+      chain: chain,
       wallet: walletAddress,
       balance: rewardsEther
     }
@@ -145,7 +163,8 @@ async function getBalanceOf(contract, walletAddress, setStateFunction) {
     setStateFunction(prevState => [...prevState, balance]);
 
   } catch (error) {
-    console.error(error)
+    console.log("Error Fetching Balance: " + error)
+    setErrorFunction(prevState => [...prevState, {chain:chain, wallet:walletAddress, balance: 'Could not calculate balance. Wallet Excluded from total'}]);
   }
 
 }

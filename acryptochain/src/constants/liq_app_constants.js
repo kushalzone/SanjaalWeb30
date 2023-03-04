@@ -280,9 +280,37 @@ export const MATIC_CONTRACT_LIST = [
 ];
 
 export const PROJECT_CONTRACT_LIST_ALL_CHAINS = [
-    {key: 1, chain: BSC, contractList:BSC_CONTRACT_LIST, provider: BSC_NODE_PROVIDER},
-    {key: 2, chain: MATIC, contractList:MATIC_CONTRACT_LIST, provider: MATIC_NODE_PROVIDER},
-    {key: 3, chain: CRO, contractList:CRONOS_CONTRACT_LIST, provider: CRONOS_NODE_PROVIDER},
-    {key: 4, chain: ETH, contractList:ETH_CONTRACT_LIST, provider: ETH_NODE_PROVIDER},
+    {
+        key: 1,
+        chain: BSC,
+        contractList:BSC_CONTRACT_LIST,
+        provider: BSC_NODE_PROVIDER,
+        singleTokenAbi:BSC_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress:BSC_LIQ_SINGLE_TOKEN_CONTRACT.address
+    },
+    {
+        key: 2, 
+        chain: MATIC,
+        contractList:MATIC_CONTRACT_LIST,
+        provider: MATIC_NODE_PROVIDER,
+        singleTokenAbi:POLYGON_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress:MATIC_LIQ_SINGLE_TOKEN_CONTRACT.address
+    },
+    {
+        key: 3,
+        chain: CRO,
+        contractList:CRONOS_CONTRACT_LIST,
+        provider: CRONOS_NODE_PROVIDER,
+        singleTokenAbi:CRONOS_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress:'0xc7981767f644C7F8e483DAbDc413e8a371b83079'
+    },
+    {
+        key: 4,
+        chain: ETH,
+        contractList:ETH_CONTRACT_LIST,
+        provider: ETH_NODE_PROVIDER, 
+        singleTokenAbi:ETh_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress:'0xd27fab2323edb75af6f4348e3745247e77690e53'
+    },
 ]
 
