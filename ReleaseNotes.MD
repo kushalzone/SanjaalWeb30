@@ -1,3 +1,7 @@
+Release 0.4 | 2023 MAR 03
+- Enhanced UI (Added Icons/ Changed Colors etc)
+- Can display errors on balance calcuation
+
 Release 0.3 | 2023 MAR 02
 - Supports multiple chains (ETH/Polygon/Cronos)
 - Not need to switch Networks
