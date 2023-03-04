@@ -16,7 +16,7 @@ import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { PROJECT_CONTRACT_LIST_ALL_CHAINS, BSC_LIQ_SINGLE_TOKEN_CONTRACT } from './constants/liq_app_constants';
+import { PROJECT_CONTRACT_LIST_ALL_CHAINS} from './projects/liquidus/config/ProjectConfig';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelection';

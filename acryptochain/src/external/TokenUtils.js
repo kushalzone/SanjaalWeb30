@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { parseBNumber } from "../services/app_utils";
-import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_SINGLE_TOKEN_CONTRACT } from "../constants/liq_app_constants";
+import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_SINGLE_TOKEN_CONTRACT } from "../projects/liquidus/config/ProjectConfig";
 import { BSC_NODE_PROVIDER } from "../constants/NetworkProviders"
 import Web3 from "web3";
 import { tokenInfoTable } from "../components/TokenInfo";
