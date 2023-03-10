@@ -1,3 +1,9 @@
+Release 0.5 | 2023 MAR 10
+- Pending Rewards column has prominent green color
+- Pie Chart showing total pending rewards by Chain
+- Introduced Grid layout for better UI organization.
+- Results now sorted by chain (Primary Sort) and then by Wallet (Secondary Sort)
+
 Release 0.4 | 2023 MAR 03
 - Enhanced UI (Added Icons/ Changed Colors etc)
 - Can display errors on balance calcuation

@@ -16,7 +16,7 @@ import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { PROJECT_CONTRACT_LIST_ALL_CHAINS} from './projects/liquidus/config/ProjectConfig';
+import { PROJECT_CONTRACT_LIST_ALL_CHAINS } from './projects/liquidus/config/ProjectConfig';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelection';
@@ -25,15 +25,15 @@ const App = () => {
   //User Inputs on UI
   const [walletAddresses, setWalletAddresses] = useState('');
   const [selectedProject, setSelectedProject] = useState('');
-  
+
   //API call results
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
   const [balanceOf, setBalanceOf] = useState([]);
   const [balanceCalcuationErrors, setBalanceCalculationErros] = useState([]);
-  
+
   //Data Loaded Flag
   const [loaded, setLoaded] = useState(false);
-  
+
   const handleWalletInputChange = event => {
     setWalletAddresses(event.target.value);
     resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros);
@@ -41,33 +41,35 @@ const App = () => {
 
   const handleProjectChange = event => {
     setSelectedProject(event.target.value);
-    resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros);
+    resetData();
   };
 
-  
-function resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros) {
-  setPoolHarvestResult(null);
-  setBalanceOf(null);
-  setBalanceCalculationErros(null);
-}
+
+  function resetData() {
+    setPoolHarvestResult(null);
+    setBalanceOf(null);
+    setBalanceCalculationErros(null);
+    setLoaded(false)
+  }
 
 
   /** Pool Specific Operations */
   const handleWalletSubmit = async event => {
     event.preventDefault();
+    setLoaded(false)
     setPoolHarvestResult([])
     setBalanceOf([])
     setBalanceCalculationErros([])
 
     const separator = /[;,\n\r\t]/;
-    
+
     const walletAddressList = walletAddresses.split(separator);
 
     /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
     walletAddressList.forEach(address => {
       PROJECT_CONTRACT_LIST_ALL_CHAINS.forEach(chainContracts => {
-        
-        
+
+
         //Loop through the pools on each chain
         chainContracts.contractList.forEach(c => {
           const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
@@ -75,13 +77,11 @@ function resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErro
           getharvestReadyTokens(c, chainContracts.chain, web3Contract, String(address).trim(), setPoolHarvestResult)
         });
 
-      //Find total balance by Chain
-      const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
-      const tokenContract = new web3Object.eth.Contract(chainContracts.singleTokenAbi, chainContracts.singleTokenAddress);
-      console.log("Chain: " + chainContracts.chain + " Address: " +  chainContracts.singleTokenAddress)
-      getBalanceOf(chainContracts.chain, tokenContract, address, setBalanceOf, setBalanceCalculationErros)
-
-
+        //Find total balance by Chain
+        const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
+        const tokenContract = new web3Object.eth.Contract(chainContracts.singleTokenAbi, chainContracts.singleTokenAddress);
+        console.log("Chain: " + chainContracts.chain + " Address: " + chainContracts.singleTokenAddress)
+        getBalanceOf(chainContracts.chain, tokenContract, address, setBalanceOf, setBalanceCalculationErros)
 
       });
 
@@ -108,16 +108,14 @@ function resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErro
 
       {selectedProject &&
         <form onSubmit={handleWalletSubmit}>
-          <Input label="Outlined secondary" value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses to find pending rewards' color="secondary"/>
+          <Input label="Outlined secondary" value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses to find pending rewards' color="secondary" />
           <p />
           <Button variant="contained" type="submit">Find Pending Reward</Button>
+          <br/>
         </form>
       }
 
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors)}
-
-      {/* {JSON.stringify(balanceOf)} */}
-
     </Container>
 
   );
@@ -152,7 +150,6 @@ async function getBalanceOf(chain, contract, walletAddress, setStateFunction, se
   try {
 
     const result = await contract.methods.balanceOf(walletAddress).call()
-    console.log("getBalanceOf Result: " + JSON.stringify(result))
     const rewardsEther = Web3.utils.fromWei(result, 'ether');
     const balance = {
       chain: chain,
@@ -164,7 +161,7 @@ async function getBalanceOf(chain, contract, walletAddress, setStateFunction, se
 
   } catch (error) {
     console.log("Error Fetching Balance: " + error)
-    setErrorFunction(prevState => [...prevState, {chain:chain, wallet:walletAddress, balance: 'Could not calculate balance. Wallet Excluded from total'}]);
+    setErrorFunction(prevState => [...prevState, { chain: chain, wallet: walletAddress, balance: 'Error calculating on this chain' }]);
   }
 
 }

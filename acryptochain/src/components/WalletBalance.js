@@ -7,6 +7,7 @@
  * Use it at your own risk. Author provides no liablity of any sort.
  */
 import React from 'react';
+import { SortByChain, SortByWallet } from '../utils/DataUtils';
 
 /**
  * 
@@ -18,20 +19,20 @@ function WalletBalance(data, errorData) {
 
     //Sum up all the wallet Balances
     const totalBalance = data.reduce((acc, item) => {
-        return acc + parseFloat(item.balance || 0);
+        return acc + Number(parseFloat(item.balance || 0));
     }, 0);
-
+  
+    var sortedFilteredData = SortByChain(SortByWallet(data))
+    var sortedErrorData = SortByChain(SortByWallet(errorData))
 
     return (
-        <div>
-            
-            <h4><font color="#007600">Tokens held in Wallet (All Wallets, All Chains): {Number(totalBalance).toFixed(2)}</font></h4>
-            
+        <div className='walletBalanceSummary'>
+            <h4><font color="#007600">Tokens Held in Wallet: {Number(totalBalance).toFixed(2)}</font></h4>
             {/* Print Wallets with Balance */}
             <ul>
-                {data.map((item, index) => {
+                {sortedFilteredData.map((item, index) => {
                     if (item) {
-                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(2) || '-'} tokens outside of farm /pools</li>)
+                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(2) || '-'} tokens</li>)
                     } else {return ''}
                 })}
             </ul>
@@ -40,7 +41,7 @@ function WalletBalance(data, errorData) {
             
             {/* Print Wallets with Error calculating Balance */}
             <ul>
-                {errorData.map((item, index) => {
+                {sortedErrorData.map((item, index) => {
                     if (item) {
                         return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ':'} <font color="red">{item.balance || '-'}</font> </li>)
                     } else {return ''}
