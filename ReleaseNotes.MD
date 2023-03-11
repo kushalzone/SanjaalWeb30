@@ -2,6 +2,7 @@ Release 0.6 | 2023 MAR 11
 - Caching Selected Project and Wallet Address for reuse i.e. on page reload or refresh
 - Showing dollar value for the accumulated reward (individual and total)
 - Showing dollar value for the tokens held in wallet. 
+- Hides wallets with 0 balance
 
 Release 0.5 | 2023 MAR 10
 - Pending Rewards column has prominent green color
