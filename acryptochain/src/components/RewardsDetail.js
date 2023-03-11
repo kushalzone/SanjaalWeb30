@@ -23,7 +23,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 
-function RewardsDetail(data, balance, balanceErrors) {
+function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
 
     //Sums up all the harvest ready tokens for summary display
     const totalHarvestReadyTokens = data.reduce((acc, item) => {
@@ -32,7 +32,7 @@ function RewardsDetail(data, balance, balanceErrors) {
 
     //Thus removes any pools in which there was no deposit
     var filteredData = data.reduce(function (filtered, option) {
-        if (option.userInfo && option.userInfo.amount > 0.0) {
+        if (option.userInfo && option.userInfo.amount > 0.1) {
             filtered.push(option);
         }
         return filtered;
@@ -56,11 +56,11 @@ function RewardsDetail(data, balance, balanceErrors) {
                     <Item>
                         <h4>Pending Rewards by Chain</h4>
                         {EarningsByChain(sortedFilteredData)}
-                        <h4><font color="#007600">Total Pending Rewards (All Wallets , All Chains): {Number(totalHarvestReadyTokens).toFixed(2)}</font></h4>
+                        <h4>Total Pending Rewards (All Wallets / All Chains):<font color="#007600"> {Number(totalHarvestReadyTokens).toFixed(2) } LIQ</font> | <em>${(Number(totalHarvestReadyTokens) * tokenPrice).toFixed(2)}</em></h4>
                     </Item>
                 </Grid>
                 <Grid xs={6}>
-                    <Item>{WalletBalance(balance, balanceErrors)}</Item>
+                    <Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item>
                 </Grid>
             </Grid>
 
@@ -68,7 +68,7 @@ function RewardsDetail(data, balance, balanceErrors) {
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white", border: 0.5, borderStyle: 'dashed' }}>
                     <TableHead>
-                        <TableRow sx={{ background: '#1976d2' }}>
+                        <TableRow sx={{ background: '#1976dd' }}>
                             <TableCell sx={{ color: 'white' }}>Chain</TableCell>
                             <TableCell sx={{ color: 'white' }}>Wallet Address</TableCell>
                             <TableCell sx={{ color: 'white' }}>Farm/Pool</TableCell>
@@ -80,12 +80,13 @@ function RewardsDetail(data, balance, balanceErrors) {
                     </TableHead>
                     <TableBody>
                         {filteredData.map((item, index) => {
+                            const rewardDollarValue = ((Number(item.harvestReadyTokens).toFixed(2) || '0') * Number(tokenPrice || 0)).toFixed(2);
                             return (
                                 <TableRow key={index}>
                                     <TableCell><StreamIcon fontSize="small" color="primary" />&nbsp;{item.chain || '-'}</TableCell>
                                     <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
                                     <TableCell><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon fontSize='small' /></a>&nbsp;<font color="#007600">{String(item.poolName).toUpperCase() || '-'}</font></TableCell>
-                                    <TableCell sx={{ background: '#007600', color: 'white', fontSize: "large" }}>{Number(item.harvestReadyTokens).toFixed(2) || '-'}</TableCell>
+                                    <TableCell sx={{ background: '#000000', color: 'green', fontSize: "large" }}>{Number(item.harvestReadyTokens).toFixed(2) || '-'} LIQ <br/><font size="2" color="gray">${rewardDollarValue}</font></TableCell>
                                     <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
                                     <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell>
                                     <TableCell>{item.userInfo?.lastDepositedAt || '-'}</TableCell>
@@ -95,7 +96,7 @@ function RewardsDetail(data, balance, balanceErrors) {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <p><font color="red">** This table only displays farms / pools in which there was a deposit made by the wallet(s)</font></p>
+            <p><font color="red">** This table only displays farms / pools in which wallet has a current deposit</font></p>
             <Footer />
         </div>
     );

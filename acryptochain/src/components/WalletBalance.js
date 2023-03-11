@@ -15,24 +15,24 @@ import { SortByChain, SortByWallet } from '../utils/DataUtils';
  * @param {*} errorData -> Wallet Balance Error Data
  * @returns 
  */
-function WalletBalance(data, errorData) {
+function WalletBalance(data, errorData, tokenPrice) {
 
     //Sum up all the wallet Balances
     const totalBalance = data.reduce((acc, item) => {
         return acc + Number(parseFloat(item.balance || 0));
     }, 0);
   
-    var sortedFilteredData = SortByChain(SortByWallet(data))
+    var sortedData = SortByChain(SortByWallet(data))
     var sortedErrorData = SortByChain(SortByWallet(errorData))
 
     return (
         <div className='walletBalanceSummary'>
-            <h4><font color="#007600">Tokens Held in Wallet: {Number(totalBalance).toFixed(2)}</font></h4>
+            <h4><font >Tokens Held in Wallet: {Number(totalBalance).toFixed(3)}</font></h4>
             {/* Print Wallets with Balance */}
             <ul>
-                {sortedFilteredData.map((item, index) => {
-                    if (item) {
-                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(2) || '-'} tokens</li>)
+                {sortedData.map((item, index) => {
+                    if (item && item.balance > 0.01) {
+                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(3) || '0'} tokens (${(Number(item.balance).toFixed(3)*tokenPrice).toFixed(3) || '0'})</li>)
                     } else {return ''}
                 })}
             </ul>
@@ -43,10 +43,11 @@ function WalletBalance(data, errorData) {
             <ul>
                 {sortedErrorData.map((item, index) => {
                     if (item) {
-                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ':'} <font color="red">{item.balance || '-'}</font> </li>)
+                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ':'} <font color="red">{item.balance || '0'}</font> </li>)
                     } else {return ''}
                 })}
             </ul>
+            <font size="1.5" color="blue">**Wallets with no balance are excluded from display</font>
         </div>
     );
 }

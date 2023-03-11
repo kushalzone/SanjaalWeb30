@@ -87,7 +87,7 @@ export const LiquidusPrice = () => {
         };
         getTokenPrice();
     }, []);
-    return tokenPrice;
+    return tokenPrice || 0;
 };
 
 

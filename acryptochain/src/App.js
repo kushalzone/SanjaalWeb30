@@ -6,7 +6,7 @@
  * 
  * Use it at your own risk. Author provides no liablity of any sort.
  */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as React from 'react';
 import Web3 from 'web3';
 import './App.css';
@@ -20,6 +20,7 @@ import { PROJECT_CONTRACT_LIST_ALL_CHAINS } from './projects/liquidus/config/Pro
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelection';
+import { GetLiquidusPrice } from './external/TokenPrice';
 
 const App = () => {
   //User Inputs on UI
@@ -30,6 +31,7 @@ const App = () => {
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
   const [balanceOf, setBalanceOf] = useState([]);
   const [balanceCalcuationErrors, setBalanceCalculationErros] = useState([]);
+  const [tokenPrice, setTokenPrice] = useState(0.0);
 
   //Data Loaded Flag
   const [loaded, setLoaded] = useState(false);
@@ -41,6 +43,8 @@ const App = () => {
 
   const handleProjectChange = event => {
     setSelectedProject(event.target.value);
+    //remember selected project
+    localStorage.setItem('selectedProject', event.target.value);
     resetData();
   };
 
@@ -52,10 +56,28 @@ const App = () => {
     setLoaded(false)
   }
 
+  //Use locally stored wallet address, if available
+  useEffect(() => {
+    const storedWalletAddress = localStorage.getItem('storedWalletAddress');
+    if (storedWalletAddress) {
+      setWalletAddresses(storedWalletAddress);
+    }
+
+    const selectedProject = localStorage.getItem('selectedProject');
+    if(selectedProject) {
+      setSelectedProject(selectedProject);
+    } 
+
+  }, []);
+
 
   /** Pool Specific Operations */
   const handleWalletSubmit = async event => {
     event.preventDefault();
+
+    //store wallet address to local storage for reuse
+    localStorage.setItem('storedWalletAddress', walletAddresses);
+
     setLoaded(false)
     setPoolHarvestResult([])
     setBalanceOf([])
@@ -64,6 +86,11 @@ const App = () => {
     const separator = /[;,\n\r\t]/;
 
     const walletAddressList = walletAddresses.split(separator);
+
+    var tokenPrice = await GetLiquidusPrice();
+    //console.log("Token Price: " + tokenPrice)
+    setTokenPrice(tokenPrice);
+
 
     /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
     walletAddressList.forEach(address => {
@@ -80,15 +107,13 @@ const App = () => {
         //Find total balance by Chain
         const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
         const tokenContract = new web3Object.eth.Contract(chainContracts.singleTokenAbi, chainContracts.singleTokenAddress);
-        console.log("Chain: " + chainContracts.chain + " Address: " + chainContracts.singleTokenAddress)
+        //console.log("Chain: " + chainContracts.chain + " Address: " + chainContracts.singleTokenAddress)
         getBalanceOf(chainContracts.chain, tokenContract, address, setBalanceOf, setBalanceCalculationErros)
 
       });
-
-
-
     });
 
+    
     setLoaded(true)
 
   };
@@ -96,13 +121,11 @@ const App = () => {
   return (
     <Container sx={{ border: 1, my: 10, pb: 10, background: '#FFFFFF' }}>
 
-      <h2>DeFi Tools | <font color="#007600">BNB Price: $<BNBPrice /></font></h2>
+      <h3>DeFi Tools | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice/></font></>}</h3>
+        
       {selectProject(selectedProject, handleProjectChange)}
 
-      {selectedProject === 'liq' &&
-        <div><font color="#007600"><h4>LIQ Price: $<LiquidusPrice /></h4>
-          <LIQTokenInfo /></font>
-        </div>}
+      {selectedProject === 'liq' && <><font color="#007600"><LIQTokenInfo /></font></>}
 
       <br />
 
@@ -115,7 +138,7 @@ const App = () => {
         </form>
       }
 
-      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors)}
+      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice)}
     </Container>
 
   );
@@ -156,12 +179,12 @@ async function getBalanceOf(chain, contract, walletAddress, setStateFunction, se
       wallet: walletAddress,
       balance: rewardsEther
     }
-    console.log(balance)
+    //console.log(balance)
     setStateFunction(prevState => [...prevState, balance]);
 
   } catch (error) {
     console.log("Error Fetching Balance: " + error)
-    setErrorFunction(prevState => [...prevState, { chain: chain, wallet: walletAddress, balance: 'Error calculating on this chain' }]);
+    setErrorFunction(prevState => [...prevState, { chain: chain, wallet: walletAddress, balance: 'Error calculating balance on this chain' }]);
   }
 
 }

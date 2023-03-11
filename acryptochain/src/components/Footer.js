@@ -20,11 +20,11 @@ export default class Footer extends PureComponent {
             <Card sx={{ border: '1', background: 'black', color: 'white' }}>
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        About
+                        ABOUT THIS TOOL
                     </Typography>
                     <Button size="small" href='https://github.com/sanjaalcorps/SanjaalWeb30/blob/master/ReleaseNotes.MD'>Release Notes</Button>
                     <Button size="small" href='https://github.com/sanjaalcorps/SanjaalWeb30/'>Source Code</Button>
-                    {'[Version: 0.5, Released on : March 10th 2023]'}
+                    {'[Version: 0.6, Released on : March 11th 2023]'}
                 </CardContent>
             </Card>
         )
