@@ -55,7 +55,6 @@ a:active {
   color: #800000;
 }
 
-
 .pieChartDiv {
   text-align: left;
   height: 300px;
@@ -70,4 +69,40 @@ a:active {
 .walletBalanceSummary {
   text-align: left;
   width: 100%;
+}
+
+.tokenInfo {
+  justify-content: center;
+}
+
+.centerText {
+  text-align: center;
+}
+
+
+.outerContainer {
+  background-color: rgb(247, 241, 241);
+}
+
+html, body {
+  width: 100%;
+  height:100%;
+}
+
+body {
+    background: linear-gradient(-45deg, #ee7752, #087cbe, #23a6d5, #23d5ab);
+    background-size: 400% 800%;
+    animation: gradient 10s ease infinite;
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

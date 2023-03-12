@@ -27,7 +27,7 @@ function WalletBalance(data, errorData, tokenPrice) {
 
     return (
         <div className='walletBalanceSummary'>
-            <h4><font >Tokens Held in Wallet: {Number(totalBalance).toFixed(3)}</font></h4>
+            <h3 className='centerText'>Tokens Held in Wallet: {Number(totalBalance).toFixed(3)} (${(Number(totalBalance).toFixed(3)*tokenPrice).toFixed(3) || '0'})</h3>
             {/* Print Wallets with Balance */}
             <ul>
                 {sortedData.map((item, index) => {
@@ -37,7 +37,7 @@ function WalletBalance(data, errorData, tokenPrice) {
                 })}
             </ul>
 
-            <hr/>
+            {sortedErrorData && <hr/>}
             
             {/* Print Wallets with Error calculating Balance */}
             <ul>

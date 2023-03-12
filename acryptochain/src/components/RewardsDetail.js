@@ -22,6 +22,7 @@ import EarningsByChain from './EarningsByChain';
 import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
+import { timeSince } from '../utils/DateTimeUtils';
 
 function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
 
@@ -54,7 +55,7 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
             <Grid container spacing={2}>
                 <Grid xs={6}>
                     <Item>
-                        <h4>Pending Rewards by Chain</h4>
+                        <h3>Pending Rewards by Chain</h3>
                         {EarningsByChain(sortedFilteredData)}
                         <h4>Total Pending Rewards (All Wallets / All Chains):<font color="#007600"> {Number(totalHarvestReadyTokens).toFixed(2) } LIQ</font> | <em>${(Number(totalHarvestReadyTokens) * tokenPrice).toFixed(2)}</em></h4>
                     </Item>
@@ -66,16 +67,16 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
 
             <h2>REWARDS DETAILS</h2>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white", border: 0.5, borderStyle: 'dashed' }}>
+                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white"}}>
                     <TableHead>
-                        <TableRow sx={{ background: '#1976dd' }}>
+                        <TableRow sx={{ background: '#000000' }}>
                             <TableCell sx={{ color: 'white' }}>Chain</TableCell>
                             <TableCell sx={{ color: 'white' }}>Wallet Address</TableCell>
                             <TableCell sx={{ color: 'white' }}>Farm/Pool</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Deposited Amount</TableCell>
+                            {/* <TableCell sx={{ color: 'white' }}>Reward Debt</TableCell> */}
+                            <TableCell sx={{ color: 'white' }}>Last Deposite</TableCell>
                             <TableCell sx={{ color: 'white' }}>Pending Rewards</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Amount</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Reward Debt</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Last Deposited Date</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -86,17 +87,20 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
                                     <TableCell><StreamIcon fontSize="small" color="primary" />&nbsp;{item.chain || '-'}</TableCell>
                                     <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
                                     <TableCell><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon fontSize='small' /></a>&nbsp;<font color="#007600">{String(item.poolName).toUpperCase() || '-'}</font></TableCell>
-                                    <TableCell sx={{ background: '#000000', color: 'green', fontSize: "large" }}>{Number(item.harvestReadyTokens).toFixed(2) || '-'} LIQ <br/><font size="2" color="gray">${rewardDollarValue}</font></TableCell>
-                                    <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'}</TableCell>
-                                    <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell>
-                                    <TableCell>{item.userInfo?.lastDepositedAt || '-'}</TableCell>
+                                    <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'} {item.type}</TableCell>
+                                    {/* <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell> */}
+                                    <TableCell>{item.userInfo?.lastDepositedAt || '-'} 
+                                        <br/>
+                                        <font size="2" color="blue">{timeSince(new Date(item.userInfo?.lastDepositedAt))} ago</font>
+                                    </TableCell>
+                                    <TableCell sx={{ background: '#000000', color: 'green', fontSize: "large", border: 0.25, borderStyle: 'dashed'  }}>{Number(item.harvestReadyTokens).toFixed(2) || '-'} LIQ <br/><font size="2" color="white">${rewardDollarValue}</font></TableCell>
                                 </TableRow>
                             );
                         })}
                     </TableBody>
                 </Table>
             </TableContainer>
-            <p><font color="red">** This table only displays farms / pools in which wallet has a current deposit</font></p>
+            <p><font color="blue" size="2">** This table only displays farms / pools in which the wallet has a current deposit. It also excludes some dust rewards.</font></p>
             <Footer />
         </div>
     );

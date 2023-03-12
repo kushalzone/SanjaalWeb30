@@ -15,10 +15,17 @@ export default function EarningsByChain(poolHarvestResult) {
         datasets: [
             {
                 data: [bscTotal, cronosTotal, maticTotal, ethTotal],
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                backgroundColor: ['green', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                hoverBackgroundColor: ['gray', 'gray', 'gray', 'gray'],
             },
         ],
+        options: {    
+            // display:true,
+            // text:'Time Used In A Day Chart (Shown in %)',
+            // responsive: true,
+            // maintainAspectRatio:false,
+            // showScale: true
+        }
     };
 
     return (

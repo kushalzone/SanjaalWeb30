@@ -16,7 +16,8 @@ export const ethNet = [{
         'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161'
     ],
     blockExplorerUrls: ['https://etherscan.io'],
-    addressExplorerPrefixURL: 'https://etherscan.io/address/'
+    addressExplorerPrefixURL: 'https://etherscan.io/address/',
+    chainImageUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png'
 }];
 
 /**
@@ -33,7 +34,8 @@ export const bscNet = [{
     },
     rpcUrls: ['https://bsc-dataseed.binance.org/'],
     blockExplorerUrls: ['https://bscscan.com/'],
-    addressExplorerPrefixURL: 'https://bscscan.com/address/'
+    addressExplorerPrefixURL: 'https://bscscan.com/address/',
+    chainImageUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png'
 }];
 
 /**
@@ -48,8 +50,9 @@ export const cronosNet = [{
         symbol: 'CRO',
     },
     rpcUrls: ['https://evm.cronos.org/'],
-    blockExplorerUrls: ['https://cronoscan.com/','https://cronos.crypto.org/explorer/'],
-    addressExplorerPrefixURL: 'https://cronoscan.com/address/'
+    blockExplorerUrls: ['https://cronoscan.com/', 'https://cronos.crypto.org/explorer/'],
+    addressExplorerPrefixURL: 'https://cronoscan.com/address/',
+    chainImageUrl: 'https://assets.coingecko.com/coins/images/7310/thumb/cro_token_logo.png'
 }];
 
 /**
@@ -65,8 +68,9 @@ export const polygonNet = [{
         decimals: 18
     },
     rpcUrls: [
-        'https://polygon-rpc.com/', 
+        'https://polygon-rpc.com/',
         'https://rpc-mainnet.maticvigil.com'],
     blockExplorerUrls: ['https://polygonscan.com/address/'],
-    addressExplorerPrefixURL: 'https://polygonscan.com/address/'
+    addressExplorerPrefixURL: 'https://polygonscan.com/address/',
+    chainImageUrl: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png'
 }];

@@ -11,29 +11,28 @@ import * as React from 'react';
 import Web3 from 'web3';
 import './App.css';
 
-import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
 import { PROJECT_CONTRACT_LIST_ALL_CHAINS } from './projects/liquidus/config/ProjectConfig';
 
 import RewardsDetail from './components/RewardsDetail';
-import { selectProject } from './components/ProjectSelection';
+import { selectProject } from './components/ProjectSelectionForm';
+import { WalletEntryForm } from './components/WalletEntryForm';
 import { GetLiquidusPrice } from './external/TokenPrice';
 
 const App = () => {
-  //User Inputs on UI
+  /** User Inputs on UI **/
   const [walletAddresses, setWalletAddresses] = useState('');
   const [selectedProject, setSelectedProject] = useState('');
 
-  //API call results
+  /** API call results **/
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
   const [balanceOf, setBalanceOf] = useState([]);
   const [balanceCalcuationErrors, setBalanceCalculationErros] = useState([]);
   const [tokenPrice, setTokenPrice] = useState(0.0);
 
-  //Data Loaded Flag
+  /** Flag to indicate if data has been loaded. **/
   const [loaded, setLoaded] = useState(false);
 
   const handleWalletInputChange = event => {
@@ -48,7 +47,6 @@ const App = () => {
     resetData();
   };
 
-
   function resetData() {
     setPoolHarvestResult(null);
     setBalanceOf(null);
@@ -56,7 +54,7 @@ const App = () => {
     setLoaded(false)
   }
 
-  //Use locally stored wallet address, if available
+  /** Use locally stored wallet addresses and project names if cached earlier **/
   useEffect(() => {
     const storedWalletAddress = localStorage.getItem('storedWalletAddress');
     if (storedWalletAddress) {
@@ -64,9 +62,9 @@ const App = () => {
     }
 
     const selectedProject = localStorage.getItem('selectedProject');
-    if(selectedProject) {
+    if (selectedProject) {
       setSelectedProject(selectedProject);
-    } 
+    }
 
   }, []);
 
@@ -112,32 +110,16 @@ const App = () => {
 
       });
     });
-
-    
     setLoaded(true)
-
   };
 
   return (
-    <Container sx={{ border: 1, my: 10, pb: 10, background: '#FFFFFF' }}>
-
-      <h3>DeFi Tools | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice/></font></>}</h3>
-        
-      {selectProject(selectedProject, handleProjectChange)}
-
+    <Container sx={{ border: 1, my: 10, pb: 10 }} className='outerContainer'>
+      <h3>DeFi Tools | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice /></font></>}</h3>
       {selectedProject === 'liq' && <><font color="#007600"><LIQTokenInfo /></font></>}
-
+      {selectProject(selectedProject, handleProjectChange)}
       <br />
-
-      {selectedProject &&
-        <form onSubmit={handleWalletSubmit}>
-          <Input label="Outlined secondary" value={walletAddresses} onChange={handleWalletInputChange} fullWidth={true} placeholder='Enter single or comma separated wallet addresses to find pending rewards' color="secondary" />
-          <p />
-          <Button variant="contained" type="submit">Find Pending Reward</Button>
-          <br/>
-        </form>
-      }
-
+      {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice)}
     </Container>
 
@@ -150,9 +132,10 @@ async function getharvestReadyTokens(contractObj, chain, contract, walletAddress
     const userInfo = await contract.methods.userInfo(walletAddress).call();
 
     const pendingRewardEther = Web3.utils.fromWei(pendingReward, 'ether');
-    const rewardDebtEther = Web3.utils.fromWei(userInfo.rewardDebt, 'ether');
+    // const rewardDebtEther = Web3.utils.fromWei(userInfo.rewardDebt, 'ether');
+    const rewardDebtEther = userInfo.rewardDebt / 1e18
     const amountEther = Web3.utils.fromWei(userInfo.amount, 'ether');
-    const datlastDepositedDate = new Date(Number(userInfo.lastDepositedAt) * 1000).toLocaleDateString('en-US');
+    const datlastDepositedDate = new Date(Number(userInfo.lastDepositedAt) * 1000).toISOString('en-US');
 
     const poolHarvestResult = {
       chain: chain,
@@ -161,7 +144,8 @@ async function getharvestReadyTokens(contractObj, chain, contract, walletAddress
       harvestReadyTokens: pendingRewardEther,
       userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate },
       contractLink: contractObj.contractLink,
-      addressExplorer: contractObj.addressExplorer
+      addressExplorer: contractObj.addressExplorer,
+      type: contractObj.type
     };
     setStateFunction(prevState => [...prevState, poolHarvestResult]);
   } catch (error) {

@@ -1,3 +1,13 @@
+Release 0.7 | 2023 MAR 12
+- Added supported network image display
+- Moved Pending Rewards column to the right
+- Moved Token Info section above the project selection dropdown
+- UI Improvement - Blue Background
+- Deposited amount now shows LP or Token
+- Removed Reward Debt to avoid confusion
+- Last deposit date now shows how many days ago a deposit was made
+- Fixed issue with wallet balance query not working on Matic chain
+
 Release 0.6 | 2023 MAR 11
 - Caching Selected Project and Wallet Address for reuse i.e. on page reload or refresh
 - Showing dollar value for the accumulated reward (individual and total)

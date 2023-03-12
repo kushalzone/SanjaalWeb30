@@ -13,7 +13,7 @@ import POLYGON_LIQ_MATIC_LP_TOKEN_ABI from '../abis/matic/polygon_liq_matic_lp_a
 import ETH_LIQ_ETH_LP_TOKEN_ABI from '../abis/eth/eth_liq_eth_lp_abi.json'
 import ETh_LIQ_SINGLE_TOKEN_ABI from '../abis/eth/eth_liq_token_abi.json'
 import { bscNet, cronosNet, ethNet, polygonNet } from '../../../constants/networks'
-import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_PROVIDER, BSC, MATIC, CRO, ETH } from '../../../constants/NetworkProviders';
+import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_PROVIDER, BSC, MATIC, CRO, ETH, BSC_IMAGE, ETH_IMAGE, CRO_IMAGE, MATIC_IMAGE } from '../../../constants/NetworkProviders';
 
 export const CONTRACT_FOR_BNB = {
     address: '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16',
@@ -33,6 +33,11 @@ export const MATIC_LIQ_SINGLE_TOKEN_CONTRACT = {
 export const CRONOS_LIQ_SINGLE_TOKEN_CONTRACT = {
     address: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
     abi: CRONOS_LIQ_SINGLE_TOKEN_ABI
+}
+
+export const ETH_LIQ_SINGLE_TOKEN_CONTRACT = {
+    address: '0x5f69b7ab8f7cab199a310fd5a27b43fef44ddcc0',
+    abi: ETh_LIQ_SINGLE_TOKEN_ABI
 }
 
 export const LIQ_BNB_CONTRACT = {
@@ -225,7 +230,7 @@ export const CRONOS_CONTRACT_LIST = [
     {
         chain: 'CRONOS',
         provider: CRONOS_NODE_PROVIDER,
-        contractUniqueName: 'CronaSwap LIQ-COR No Vesting',
+        contractUniqueName: 'CronaSwap LIQ-CRO No Vesting',
         address: '0x1c7fDE0a9619bC81b23cAEF6992288BA5547a34F',
         lpSwapToken: '0x3295007761C290741B6b363b86dF9ba3467F0754',
         rewardToken: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
@@ -283,34 +288,41 @@ export const PROJECT_CONTRACT_LIST_ALL_CHAINS = [
     {
         key: 1,
         chain: BSC,
-        contractList:BSC_CONTRACT_LIST,
+        contractList: BSC_CONTRACT_LIST,
         provider: BSC_NODE_PROVIDER,
-        singleTokenAbi:BSC_LIQ_SINGLE_TOKEN_ABI,
-        singleTokenAddress:BSC_LIQ_SINGLE_TOKEN_CONTRACT.address
+        singleTokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress: BSC_LIQ_SINGLE_TOKEN_CONTRACT.address
     },
     {
-        key: 2, 
+        key: 2,
         chain: MATIC,
-        contractList:MATIC_CONTRACT_LIST,
+        contractList: MATIC_CONTRACT_LIST,
         provider: MATIC_NODE_PROVIDER,
-        singleTokenAbi:POLYGON_LIQ_SINGLE_TOKEN_ABI,
-        singleTokenAddress:MATIC_LIQ_SINGLE_TOKEN_CONTRACT.address
+        singleTokenAbi: POLYGON_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress: MATIC_LIQ_SINGLE_TOKEN_CONTRACT.address
     },
     {
         key: 3,
         chain: CRO,
-        contractList:CRONOS_CONTRACT_LIST,
+        contractList: CRONOS_CONTRACT_LIST,
         provider: CRONOS_NODE_PROVIDER,
-        singleTokenAbi:CRONOS_LIQ_SINGLE_TOKEN_ABI,
-        singleTokenAddress:'0xc7981767f644C7F8e483DAbDc413e8a371b83079'
+        singleTokenAbi: CRONOS_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress: CRONOS_LIQ_SINGLE_TOKEN_CONTRACT.address
     },
     {
         key: 4,
         chain: ETH,
-        contractList:ETH_CONTRACT_LIST,
-        provider: ETH_NODE_PROVIDER, 
-        singleTokenAbi:ETh_LIQ_SINGLE_TOKEN_ABI,
-        singleTokenAddress:'0xd27fab2323edb75af6f4348e3745247e77690e53'
+        contractList: ETH_CONTRACT_LIST,
+        provider: ETH_NODE_PROVIDER,
+        singleTokenAbi: ETh_LIQ_SINGLE_TOKEN_ABI,
+        singleTokenAddress: ETH_LIQ_SINGLE_TOKEN_CONTRACT.address
     },
 ]
 
+export const SUPPORETD_NETWORKS = [
+    { chain: BSC, chainImageUrl: BSC_IMAGE },
+    { chain: ETH, chainImageUrl: ETH_IMAGE },
+    { chain: MATIC, chainImageUrl: MATIC_IMAGE },
+    { chain: CRO, chainImageUrl: CRO_IMAGE },
+
+]
