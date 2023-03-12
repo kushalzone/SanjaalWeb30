@@ -6,5 +6,4 @@ This project is created as a part of me learning about blockchain, web3.0 and di
 Code is provided as is and no liability of any kind is inferred or provided.
 
 Running this code:
-cd acryptochain
-npm start
+> cd acryptochain > npm start
