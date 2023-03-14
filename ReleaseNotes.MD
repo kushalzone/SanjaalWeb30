@@ -1,3 +1,10 @@
+Release 0.8 | 2023 MAR 13
+- Added Project Social Links
+- Reward Detail shows when the pools unlock
+- Earnings by Chain Chart now shows underlying data in a table
+- Added Security notice in the footer section
+- Minor UI / Visual Changes
+
 Release 0.7 | 2023 MAR 12
 - Added supported network image display
 - Moved Pending Rewards column to the right

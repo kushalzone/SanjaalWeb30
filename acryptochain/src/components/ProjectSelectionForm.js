@@ -13,14 +13,14 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 
 export function selectProject(selectedProject, handleProjectChange) {
-  return <FormControl variant="outlined" sx={{ mb: 1, minWidth: '50%' }}>
-    <InputLabel id="key_selectedProject">Project</InputLabel>
+  return <FormControl variant="outlined" sx={{ mb: 1, width: '100%' }}>
+    <InputLabel id="key_selectedProject">Select a Project</InputLabel>
     <Select
       labelId="key_selectedProject"
       id="selectedProject"
       value={selectedProject}
       onChange={handleProjectChange}
-      label="Project"
+      label="Select a Project"
     >
       <MenuItem value="">
         <em>None</em>

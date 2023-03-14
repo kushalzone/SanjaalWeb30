@@ -21,34 +21,38 @@ function WalletBalance(data, errorData, tokenPrice) {
     const totalBalance = data.reduce((acc, item) => {
         return acc + Number(parseFloat(item.balance || 0));
     }, 0);
-  
+
     var sortedData = SortByChain(SortByWallet(data))
     var sortedErrorData = SortByChain(SortByWallet(errorData))
 
-    return (
+    return (<>
         <div className='walletBalanceSummary'>
-            <h3 className='centerText'>Tokens Held in Wallet: {Number(totalBalance).toFixed(3)} (${(Number(totalBalance).toFixed(3)*tokenPrice).toFixed(3) || '0'})</h3>
+            <h3 className='centerText'>Tokens Held in Wallet: {Number(totalBalance).toFixed(3)} (${(Number(totalBalance).toFixed(3) * tokenPrice).toFixed(3) || '0'})</h3>
             {/* Print Wallets with Balance */}
             <ul>
                 {sortedData.map((item, index) => {
                     if (item && item.balance > 0.01) {
-                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(3) || '0'} tokens (${(Number(item.balance).toFixed(3)*tokenPrice).toFixed(3) || '0'})</li>)
-                    } else {return ''}
+                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(3) || '0'} tokens (${(Number(item.balance).toFixed(3) * tokenPrice).toFixed(3) || '0'})</li>)
+                    } else { return '' }
                 })}
             </ul>
 
-            {sortedErrorData && <hr/>}
-            
+            {sortedErrorData && <hr />}
+
             {/* Print Wallets with Error calculating Balance */}
             <ul>
                 {sortedErrorData.map((item, index) => {
                     if (item) {
                         return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ':'} <font color="red">{item.balance || '0'}</font> </li>)
-                    } else {return ''}
+                    } else { return '' }
                 })}
             </ul>
-            <font size="1.5" color="blue">**Wallets with no balance are excluded from display</font>
+
         </div>
+        <div className='fineLine'>
+            <font color="blue">**Wallets with no balance are excluded from display</font>
+        </div>
+    </>
     );
 }
 

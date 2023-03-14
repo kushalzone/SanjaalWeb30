@@ -39,7 +39,7 @@
 
 
 a:link {
-  color: #f8890b;
+  color: #ff0062;
   
 }
 /* visited link */
@@ -58,10 +58,9 @@ a:active {
 .pieChartDiv {
   text-align: left;
   height: 300px;
-  width: 100%;
+  width: 96%;
   background-color: lightskyblue;
-  padding-top: 2%;
-  padding-bottom: 2%;
+  padding: 2%;
   display: flex;
   justify-content: center;
 }
@@ -73,12 +72,20 @@ a:active {
 
 .tokenInfo {
   justify-content: center;
+  font-size: medium;
+  background-color: purple;
+  color: white
+}
+
+.fineLine {
+  justify-content: right;
+  font-size: medium;
+  padding: 1em;
 }
 
 .centerText {
   text-align: center;
 }
-
 
 .outerContainer {
   background-color: rgb(247, 241, 241);

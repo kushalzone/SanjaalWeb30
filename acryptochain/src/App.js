@@ -8,18 +8,21 @@
  */
 import { useState, useEffect } from 'react';
 import * as React from 'react';
+import Grid from '@mui/material/Unstable_Grid2'
+
 import Web3 from 'web3';
 import './App.css';
 
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { PROJECT_CONTRACT_LIST_ALL_CHAINS } from './projects/liquidus/config/ProjectConfig';
+import { PROJECT_CONTRACT_LIST_ALL_CHAINS, PROJECT_META } from './projects/liquidus/config/ProjectConfig';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelectionForm';
 import { WalletEntryForm } from './components/WalletEntryForm';
 import { GetLiquidusPrice } from './external/TokenPrice';
+import ProjectSocials from './components/ProjectSocials';
 
 const App = () => {
   /** User Inputs on UI **/
@@ -94,7 +97,6 @@ const App = () => {
     walletAddressList.forEach(address => {
       PROJECT_CONTRACT_LIST_ALL_CHAINS.forEach(chainContracts => {
 
-
         //Loop through the pools on each chain
         chainContracts.contractList.forEach(c => {
           const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
@@ -116,9 +118,16 @@ const App = () => {
   return (
     <Container sx={{ border: 1, my: 10, pb: 10 }} className='outerContainer'>
       <h3>DeFi Tools | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice /></font></>}</h3>
-      {selectedProject === 'liq' && <><font color="#007600"><LIQTokenInfo /></font></>}
-      {selectProject(selectedProject, handleProjectChange)}
-      <br />
+      {selectedProject === 'liq' && <LIQTokenInfo />}
+
+      <Grid spacing={2} className='outerContainer'>
+        <Grid>
+          {selectProject(selectedProject, handleProjectChange)}
+        </Grid>
+        <Grid>
+          {selectedProject && ProjectSocials(PROJECT_META)}
+        </Grid>
+      </Grid>
       {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice)}
     </Container>
@@ -145,7 +154,8 @@ async function getharvestReadyTokens(contractObj, chain, contract, walletAddress
       userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate },
       contractLink: contractObj.contractLink,
       addressExplorer: contractObj.addressExplorer,
-      type: contractObj.type
+      type: contractObj.type, 
+      vestingPeriodInMonths: contractObj.vestingPeriodInMonths,
     };
     setStateFunction(prevState => [...prevState, poolHarvestResult]);
   } catch (error) {

@@ -15,6 +15,25 @@ import ETh_LIQ_SINGLE_TOKEN_ABI from '../abis/eth/eth_liq_token_abi.json'
 import { bscNet, cronosNet, ethNet, polygonNet } from '../../../constants/networks'
 import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_PROVIDER, BSC, MATIC, CRO, ETH, BSC_IMAGE, ETH_IMAGE, CRO_IMAGE, MATIC_IMAGE } from '../../../constants/NetworkProviders';
 
+export const PROJECT_META = {
+    name: 'Liquidus',
+    socials: [
+        {name: 'Website', link: 'https://liquidus.finance'},
+        {name: 'Twitter', link: 'https://twitter.com/LiquidusFinance'},
+        {name: 'Telegram', link: 'https://t.me/liquidusfinance'},
+        {name: 'Instagram', link: 'https://www.instagram.com/liquidus_finance/'},
+        {name: 'Discord', link: 'https://discord.gg/zfQUjejyRs'},
+        {name: 'Documentation', link: 'https://docs.liquidus.finance/'},
+        {name: 'Email', link: 'mailto:team@liquidus.finance'},
+        {name: 'Blog', link: 'https://medium.com/@liquidus'},
+        {name: 'Github', link: 'https://github.com/Liquidus-Finance'},
+        {name: 'Whitepaper', link: 'https://liquidus.finance/#Litepaper'},
+        {name: 'CMC', link: 'https://coinmarketcap.com/currencies/liquidus/'},
+        {name: 'CoinGecko', link: 'https://www.coingecko.com/en/coins/liquidus/'},
+        
+    ]
+}
+
 export const CONTRACT_FOR_BNB = {
     address: '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16',
     abi: BSC_BNB_ABI
@@ -73,7 +92,7 @@ export const BSC_CONTRACT_LIST = [
         rewardToken: '0xc7981767f644c7f8e483dabdc413e8a371b83079',
         abi: BSC_LIQ_FARM_CONTRACT_ABI,
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
-        vestingPeriodInMonths: null,
+        vestingPeriodInMonths: 0,
         type: 'LP',
         name: 'LIQ - BNB',
         title: 'Biswap',
@@ -236,7 +255,7 @@ export const CRONOS_CONTRACT_LIST = [
         rewardToken: '0xABd380327Fe66724FFDa91A87c772FB8D00bE488',
         abi: CRONOS_LIQ_CRO_LP_TOKEN_ABI,
         tokenAbi: CRONOS_LIQ_SINGLE_TOKEN_ABI,
-        vestingPeriodInMonths: null,
+        vestingPeriodInMonths: 0,
         type: 'LP',
         name: 'LIQ - CRO',
         title: 'CronaSwap',
