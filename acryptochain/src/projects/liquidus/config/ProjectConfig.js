@@ -17,6 +17,7 @@ import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_
 
 export const PROJECT_META = {
     name: 'Liquidus',
+    logoUrl: '/images/logo_liquidus.png',
     socials: [
         {name: 'Website', link: 'https://liquidus.finance'},
         {name: 'Twitter', link: 'https://twitter.com/LiquidusFinance'},

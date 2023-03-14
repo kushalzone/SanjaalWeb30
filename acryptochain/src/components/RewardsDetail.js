@@ -26,8 +26,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 import { timeSince, UnlockTime } from '../utils/DateTimeUtils';
+import EarningsByWallet from './EarningsByWallet';
 
-function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
+function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList) {
 
     //Sums up all the harvest ready tokens for summary display
     const totalHarvestReadyTokens = data.reduce((acc, item) => {
@@ -60,16 +61,20 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice) {
                 <Grid xs={6}>
                     <Item>
                         <h3>Pending Rewards by Chain</h3>
-                        {EarningsByChain(sortedFilteredData, tokenPrice)}
-                        <h4>Total Pending Rewards (All Wallets / All Chains):<font color="#007600"> {Number(totalHarvestReadyTokens).toFixed(2) } LIQ</font> | ${(Number(totalHarvestReadyTokens) * tokenPrice).toFixed(2)}</h4>
+                        {EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}
                     </Item>
                 </Grid>
                 <Grid xs={6}>
+                    <Item>
+                        <h3>Pending Rewards by Wallet Address</h3>
+                        {EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item>
+                </Grid>
+                <Grid xs={12}>
                     <Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item>
                 </Grid>
             </Grid>
 
-            <h2>REWARDS DETAILS</h2>
+            <h2>REWARDS DETAIL</h2>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white"}}>
                     <TableHead>

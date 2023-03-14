@@ -38,6 +38,8 @@ const App = () => {
   /** Flag to indicate if data has been loaded. **/
   const [loaded, setLoaded] = useState(false);
 
+  const separator = /[;,\n\r\t]/;
+
   const handleWalletInputChange = event => {
     setWalletAddresses(event.target.value);
     resetData(setPoolHarvestResult, setBalanceOf, setBalanceCalculationErros);
@@ -84,7 +86,7 @@ const App = () => {
     setBalanceOf([])
     setBalanceCalculationErros([])
 
-    const separator = /[;,\n\r\t]/;
+    
 
     const walletAddressList = walletAddresses.split(separator);
 
@@ -129,7 +131,8 @@ const App = () => {
         </Grid>
       </Grid>
       {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
-      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice)}
+      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice, walletAddresses.split(separator))}
+      
     </Container>
 
   );

@@ -65,6 +65,16 @@ a:active {
   justify-content: center;
 }
 
+.chartDiv {
+  text-align: center;
+  height: 300px;
+  width: 96%;
+  background-color: lightskyblue;
+  padding: 2%;
+  display: flex;
+  justify-content: center;
+}
+
 .walletBalanceSummary {
   text-align: left;
   width: 100%;

@@ -1,3 +1,8 @@
+Release 0.9 | 2023 MAR 14
+- Added functionality to view the total by an wallet
+- Improved chart data display
+- Using token images from Sanjaal's server
+
 Release 0.8 | 2023 MAR 13
 - Added Project Social Links
 - Reward Detail shows when the pools unlock
