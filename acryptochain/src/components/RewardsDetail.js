@@ -13,13 +13,11 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
 import Paper from '@mui/material/Paper';
 import StreamIcon from '@mui/icons-material/Stream';
 import LockClockIcon from '@mui/icons-material/LockClock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import WalletBalance from './WalletBalance';
-import Footer from './Footer';
 import LinkIcon from '@mui/icons-material/Link';
 import EarningsByChain from './EarningsByChain';
 import Grid from '@mui/material/Unstable_Grid2'
@@ -27,6 +25,7 @@ import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 import { timeSince, UnlockTime } from '../utils/DateTimeUtils';
 import EarningsByWallet from './EarningsByWallet';
+import { lightBlue } from '@mui/material/colors';
 
 function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList) {
 
@@ -58,25 +57,14 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
 
         <h2>REWARDS SUMMARY</h2>
             <Grid container spacing={2}>
-                <Grid xs={6}>
-                    <Item>
-                        <h3>Pending Rewards by Chain</h3>
-                        {EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}
-                    </Item>
-                </Grid>
-                <Grid xs={6}>
-                    <Item>
-                        <h3>Pending Rewards by Wallet Address</h3>
-                        {EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item>
-                </Grid>
-                <Grid xs={12}>
-                    <Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item>
-                </Grid>
+                <Grid xs={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}</Item></Grid>
+                <Grid xs={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item></Grid>
+                <Grid xs={12}><Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item></Grid>
             </Grid>
 
             <h2>REWARDS DETAIL</h2>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white"}}>
+                <Table sx={{ minWidth: 450, tableLayout: "auto", background: 'white'}}>
                     <TableHead>
                         <TableRow sx={{ background: '#000000' }}>
                             <TableCell sx={{ color: 'white' }}>Chain</TableCell>
@@ -109,7 +97,7 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                                     <TableCell sx={{ background: '#000000', color: 'white', fontSize: "2", textAlign:'center'}}>
                                         {Number(item.harvestReadyTokens).toFixed(2) || '-'} LIQ 
                                         <br/>
-                                        <font color="green">${rewardDollarValue}</font>
+                                        <font color="green">&rarr;&nbsp;${rewardDollarValue}</font>
                                     </TableCell>
                                 </TableRow>
                             );
@@ -118,7 +106,6 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                 </Table>
             </TableContainer>
             <p><font color="blue" size="2">** This table only displays farms / pools in which the wallet has a current deposit. It also excludes some dust rewards.</font></p>
-            <Footer />
         </div>
     );
 }

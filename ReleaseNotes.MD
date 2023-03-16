@@ -1,3 +1,8 @@
+Release 0.10 | 2023 MAR 15
+- Moved Token Info & Project Socials to the Footer.
+- Modified wallet balance section to display as a table
+- Added explainer text at various places
+
 Release 0.9 | 2023 MAR 14
 - Added functionality to view the total by an wallet
 - Improved chart data display

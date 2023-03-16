@@ -16,13 +16,13 @@ import './App.css';
 import Container from '@mui/material/Container';
 
 import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { PROJECT_CONTRACT_LIST_ALL_CHAINS, PROJECT_META } from './projects/liquidus/config/ProjectConfig';
+import { PROJECT_CONTRACT_LIST_ALL_CHAINS} from './projects/liquidus/config/ProjectConfig';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelectionForm';
 import { WalletEntryForm } from './components/WalletEntryForm';
 import { GetLiquidusPrice } from './external/TokenPrice';
-import ProjectSocials from './components/ProjectSocials';
+import Footer from './components/Footer';
 
 const App = () => {
   /** User Inputs on UI **/
@@ -53,10 +53,10 @@ const App = () => {
   };
 
   function resetData() {
-    setPoolHarvestResult(null);
-    setBalanceOf(null);
-    setBalanceCalculationErros(null);
     setLoaded(false)
+    setPoolHarvestResult([]);
+    setBalanceOf([]);
+    setBalanceCalculationErros([]);
   }
 
   /** Use locally stored wallet addresses and project names if cached earlier **/
@@ -81,12 +81,7 @@ const App = () => {
     //store wallet address to local storage for reuse
     localStorage.setItem('storedWalletAddress', walletAddresses);
 
-    setLoaded(false)
-    setPoolHarvestResult([])
-    setBalanceOf([])
-    setBalanceCalculationErros([])
-
-    
+    resetData()
 
     const walletAddressList = walletAddresses.split(separator);
 
@@ -119,20 +114,16 @@ const App = () => {
 
   return (
     <Container sx={{ border: 1, my: 10, pb: 10 }} className='outerContainer'>
-      <h3>DeFi Tools | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice /></font></>}</h3>
-      {selectedProject === 'liq' && <LIQTokenInfo />}
-
+      <h3><font color="red">&hearts;&hearts;</font> Sanjaal Corps - Web3 Tool | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice /></font></>}</h3>
       <Grid spacing={2} className='outerContainer'>
         <Grid>
           {selectProject(selectedProject, handleProjectChange)}
         </Grid>
-        <Grid>
-          {selectedProject && ProjectSocials(PROJECT_META)}
-        </Grid>
       </Grid>
       {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice, walletAddresses.split(separator))}
-      
+      {selectedProject === 'liq' && <LIQTokenInfo />}
+      <Footer/>
     </Container>
 
   );

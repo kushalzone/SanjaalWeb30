@@ -39,16 +39,16 @@
 
 
 a:link {
-  color: #ff0062;
+  color: lightskyblue;
   
 }
 /* visited link */
 a:visited {
-  color: #f8890b;
+  color: lightskyblue;
 }
 /* mouse over link */
 a:hover {
-  color: #ccc;
+  color: red;
 }
 /* selected link */
 a:active {
@@ -63,6 +63,7 @@ a:active {
   padding: 2%;
   display: flex;
   justify-content: center;
+  margin-bottom: 0.5em;
 }
 
 .chartDiv {
@@ -73,6 +74,7 @@ a:active {
   padding: 2%;
   display: flex;
   justify-content: center;
+  margin-bottom: 0.5em;
 }
 
 .walletBalanceSummary {
@@ -83,7 +85,7 @@ a:active {
 .tokenInfo {
   justify-content: center;
   font-size: medium;
-  background-color: purple;
+  background-color: black;
   color: white
 }
 
@@ -99,6 +101,10 @@ a:active {
 
 .outerContainer {
   background-color: rgb(247, 241, 241);
+}
+
+.footerButtons {
+  margin-right: 1em;
 }
 
 html, body {

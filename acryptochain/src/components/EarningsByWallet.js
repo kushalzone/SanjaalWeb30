@@ -1,12 +1,14 @@
+/**
+ * @author Kushal Paudyal
+ * Written For Sanjaal Corps
+ * https://www.acryptochan.com
+ * @since Februrary 2023
+ * 
+ * Use it at your own risk. Author provides no liablity of any sort.
+ */
 import React from 'react'
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import {
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-} from 'chart.js';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, Title } from "chart.js";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAddressList, totalHarvestReadyTokens) {
-   
+
     ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
     const totalByWalletData = getTotalByWallet(poolHarvestResult, walletAddressList)
@@ -27,11 +29,11 @@ export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAd
         labels: totalByWalletData.labels,
         datasets: [
             {
-                label: "Pending Reward",
+                label: "Pending Reward Tokens",
                 data: totalByWalletData.totals,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                hoverBackgroundColor: ['gray', 'gray', 'gray', 'gray'],
+                borderColor: 'white',
+                backgroundColor: ['green', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                hoverBackgroundColor: ['black'],
             },
         ]
     };
@@ -46,16 +48,19 @@ export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAd
         responsive: true,
         plugins: {
             legend: {
+                display: false,
                 position: 'bottom',
             },
             title: {
-                display: true,
+                display: false,
                 text: 'Total Pending Rewards By Wallet',
             },
         },
     };
 
     return (<>
+        <h3>Pending Rewards by Wallet Address</h3>
+        <h6>How many rewards are left to be harvested categorized by Wallet Address</h6>
         <div className="chartDiv">
             <Bar options={options} data={data} />
         </div>
@@ -84,12 +89,11 @@ export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAd
                         })}
 
                         <TableRow key={'grandTotalRow'} sx={{ background: 'green' }}>
-                            <TableCell sx={{ color: 'white' }}>TOTAL &#x2705; ALL WALLETS &#x2705; ALL CHAINS</TableCell>
+                            <TableCell sx={{ color: 'white', textAlign: 'right' }}>TOTAL &#x2705; ALL WALLETS &#x2705; ALL CHAINS</TableCell>
                             <TableCell sx={{ color: 'white' }}>
-                                {totalRewardLiq} LIQ
+                            &rarr;&nbsp;{totalRewardLiq} LIQ
                                 <br />
-                                <font size="2">${totalRewardDollar}</font>
-
+                                &rarr;&nbsp;<font size="2">${totalRewardDollar}</font>
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -115,19 +119,14 @@ function getTotalByWallet(poolHarvestResult, walletAddressList) {
     };
 
     return { labels: labelsData, totals: totalsData, dataMap }
-
-
 }
 
 function reduceTotalForWallet(poolHarvestResult, wallet) {
 
     const filteredByWallet = poolHarvestResult.filter(r => r.walletAddress.includes(wallet));
-
     const total = filteredByWallet.reduce((acc, item) => {
         return acc + Number(parseFloat(item.harvestReadyTokens || 0).toFixed(3));
     }, 0);
-
     return total
-
 }
 

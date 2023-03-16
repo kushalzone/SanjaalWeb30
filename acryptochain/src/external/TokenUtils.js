@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { parseBNumber } from "../services/app_utils";
-import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_SINGLE_TOKEN_CONTRACT, SUPPORETD_NETWORKS } from "../projects/liquidus/config/ProjectConfig";
+import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_SINGLE_TOKEN_CONTRACT, SUPPORETD_NETWORKS, PROJECT_META } from "../projects/liquidus/config/ProjectConfig";
 import { BSC_NODE_PROVIDER } from "../constants/NetworkProviders"
 import Web3 from "web3";
 import { tokenInfoTable } from "../components/TokenInfo";
@@ -49,7 +49,7 @@ export const LIQTokenInfo = () => {
 
                 const totalSupplyEther = Web3.utils.fromWei(totalSupply, 'ether');
                 
-                const result = tokenInfoTable(BSC_LIQ_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner, SUPPORETD_NETWORKS)
+                const result = tokenInfoTable(BSC_LIQ_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner, SUPPORETD_NETWORKS, PROJECT_META)
 
                 setTokenInfo(result)
             } catch (error) {

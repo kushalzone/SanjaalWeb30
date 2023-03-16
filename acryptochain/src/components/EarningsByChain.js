@@ -29,7 +29,7 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
             {
                 data: [bscTotal, cronosTotal, maticTotal, ethTotal],
                 backgroundColor: ['green', '#36A2EB', '#FFCE56', '#4BC0C0'],
-                hoverBackgroundColor: ['gray', 'gray', 'gray', 'gray'],
+                hoverBackgroundColor: ['black'],
             },
         ],
         options: {
@@ -42,6 +42,8 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
 
     return (
         <>
+            <h3>Pending Rewards by Chain</h3>
+            <h6>How many rewards are left to be harvested categorized by chain</h6>
             <div className="pieChartDiv">
                 <Pie data={data} />
             </div>
@@ -70,11 +72,11 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
                             })}
 
                             <TableRow key={'grandTotalRow'} sx={{ background: 'green' }}>
-                                <TableCell sx={{ color: 'white' }}>TOTAL &#x2705; ALL WALLETS &#x2705; ALL CHAINS</TableCell>
+                                <TableCell sx={{ color: 'white', textAlign: 'right' }}>TOTAL &#x2705; ALL WALLETS &#x2705; ALL CHAINS</TableCell>
                                 <TableCell sx={{ color: 'white' }}>
-                                    {totalRewardLiq} LIQ
+                                &rarr;&nbsp;{totalRewardLiq} LIQ
                                     <br />
-                                    <font size="2">${totalRewardDollar}</font>
+                                    &rarr;&nbsp;<font size="2">${totalRewardDollar}</font>
 
                                 </TableCell>
                             </TableRow>

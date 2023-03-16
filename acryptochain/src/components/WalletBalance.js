@@ -7,6 +7,14 @@
  * Use it at your own risk. Author provides no liablity of any sort.
  */
 import React from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 
 /**
@@ -27,17 +35,44 @@ function WalletBalance(data, errorData, tokenPrice) {
 
     return (<>
         <div className='walletBalanceSummary'>
-            <h3 className='centerText'>Tokens Held in Wallet: {Number(totalBalance).toFixed(3)} (${(Number(totalBalance).toFixed(3) * tokenPrice).toFixed(3) || '0'})</h3>
+            <h3 className='centerText'>Tokens Held in Wallets</h3>
+            <h6 className='centerText'>Project tokens held in wallet, but not in farm/pools</h6>
             {/* Print Wallets with Balance */}
-            <ul>
-                {sortedData.map((item, index) => {
-                    if (item && item.balance > 0.01) {
-                        return (<li key={index}>{item.chain} - {String(item.wallet).substring(0, 10) + ''} holds {Number(item.balance).toFixed(3) || '0'} tokens (${(Number(item.balance).toFixed(3) * tokenPrice).toFixed(3) || '0'})</li>)
-                    } else { return '' }
-                })}
-            </ul>
+            <TableContainer component={Paper}>
+                <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }}>
+                    <TableHead>
+                        <TableRow sx={{ background: '#000000' }}>
+                            <TableCell sx={{ color: 'white' }}>Chain</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Wallet Address</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Token Holdings</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Dollar Value</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {sortedData.map((item, index) => {
+                            const rewardDollarValue = ((Number(item.balance).toFixed(2) || '0') * Number(tokenPrice || 0)).toFixed(2);
+                            if (item && item.balance > 0.01) {
+                                return (
+                                    <TableRow key={index}>
+                                        <TableCell>{item.chain || '-'}</TableCell>
+                                        <TableCell>{item.wallet}</TableCell>
+                                        <TableCell>{Number(item.balance).toFixed(3)}</TableCell>
+                                        <TableCell>${rewardDollarValue}</TableCell>
+                                    </TableRow>
+                                );
+                            } else { return '' }
+                        })}
 
-            {sortedErrorData && <hr />}
+                            <TableRow key={'totalRow'} sx={{ background: 'green'}}>
+                                        <TableCell></TableCell>
+                                        <TableCell sx={{ color: 'white', textAlign:'right' }}>TOTAL &#x2705; ALL WALLETS</TableCell>
+                                        <TableCell sx={{ color: 'white'}}>&rarr;&nbsp;{Number(totalBalance).toFixed(3)}</TableCell>
+                                        <TableCell sx={{ color: 'white'}}>&rarr;&nbsp;${(Number(totalBalance).toFixed(3) * tokenPrice).toFixed(2) || '0'}</TableCell>
+                                    </TableRow>
+
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
             {/* Print Wallets with Error calculating Balance */}
             <ul>
@@ -49,7 +84,7 @@ function WalletBalance(data, errorData, tokenPrice) {
             </ul>
 
         </div>
-        <div className='fineLine'>
+        <div>
             <font color="blue">**Wallets with no balance are excluded from display</font>
         </div>
     </>
