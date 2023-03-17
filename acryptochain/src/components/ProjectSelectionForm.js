@@ -25,9 +25,9 @@ export function selectProject(selectedProject, handleProjectChange) {
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
-      <MenuItem value={'liq'}>Liquidus</MenuItem>
-      {/* <MenuItem value={'oni'}>Onino</MenuItem>
-          <MenuItem value={'pryz'}>Pryz</MenuItem> */}
+      <MenuItem value={'LIQ'}>Liquidus</MenuItem>
+      <MenuItem value={'ONI'}>Onino</MenuItem>
+      {/* <MenuItem value={'pryz'}>Pryz</MenuItem> */}
     </Select>
   </FormControl>;
 }

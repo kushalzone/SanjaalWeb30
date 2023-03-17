@@ -55,7 +55,7 @@ function WalletBalance(data, errorData, tokenPrice) {
                                 return (
                                     <TableRow key={index}>
                                         <TableCell>{item.chain || '-'}</TableCell>
-                                        <TableCell>{item.wallet}</TableCell>
+                                        <TableCell>{String(item.wallet).substring(0,10)}</TableCell>
                                         <TableCell>{Number(item.balance).toFixed(3)}</TableCell>
                                         <TableCell>${rewardDollarValue}</TableCell>
                                     </TableRow>
@@ -63,12 +63,12 @@ function WalletBalance(data, errorData, tokenPrice) {
                             } else { return '' }
                         })}
 
-                            <TableRow key={'totalRow'} sx={{ background: 'green'}}>
-                                        <TableCell></TableCell>
-                                        <TableCell sx={{ color: 'white', textAlign:'right' }}>TOTAL &#x2705; ALL WALLETS</TableCell>
-                                        <TableCell sx={{ color: 'white'}}>&rarr;&nbsp;{Number(totalBalance).toFixed(3)}</TableCell>
-                                        <TableCell sx={{ color: 'white'}}>&rarr;&nbsp;${(Number(totalBalance).toFixed(3) * tokenPrice).toFixed(2) || '0'}</TableCell>
-                                    </TableRow>
+                        <TableRow key={'totalRow'} sx={{ background: 'gray' }}>
+                            <TableCell></TableCell>
+                            <TableCell sx={{ color: 'white', textAlign: 'right' }}>Total</TableCell>
+                            <TableCell sx={{ color: 'white' }}>{Number(totalBalance).toFixed(3)}</TableCell>
+                            <TableCell sx={{ color: 'white' }}>${(Number(totalBalance).toFixed(3) * tokenPrice).toFixed(2) || '0'}</TableCell>
+                        </TableRow>
 
                     </TableBody>
                 </Table>

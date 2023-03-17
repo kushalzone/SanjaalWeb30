@@ -15,19 +15,23 @@ import './App.css';
 
 import Container from '@mui/material/Container';
 
-import { BNBPrice, LiquidusPrice, LIQTokenInfo } from './external/TokenUtils';
-import { PROJECT_CONTRACT_LIST_ALL_CHAINS} from './projects/liquidus/config/ProjectConfig';
+import { LIQTokenInfo, ONITokenInfo } from './external/TokenUtils';
+import { PROJECT_CONFIGS } from './projects/Projects';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelectionForm';
 import { WalletEntryForm } from './components/WalletEntryForm';
-import { GetLiquidusPrice } from './external/TokenPrice';
+import { BNBPrice, getTokenPriceBSC } from './external/TokenPrice';
 import Footer from './components/Footer';
+import { Button } from '@mui/material';
 
 const App = () => {
   /** User Inputs on UI **/
   const [walletAddresses, setWalletAddresses] = useState('');
   const [selectedProject, setSelectedProject] = useState('');
+
+  /** Project Config to Use. This is the main configuration for the page */
+  const [projectConfig, setProjectConfig] = useState([])
 
   /** API call results **/
   const [poolHarvestResult, setPoolHarvestResult] = useState([])
@@ -47,6 +51,12 @@ const App = () => {
 
   const handleProjectChange = event => {
     setSelectedProject(event.target.value);
+
+    let projectConfig = findConfigByProject(event.target.value)
+    if (projectConfig) {
+      setProjectConfig(projectConfig)
+      localStorage.setItem('projectConfig', JSON.stringify(projectConfig))
+    }
     //remember selected project
     localStorage.setItem('selectedProject', event.target.value);
     resetData();
@@ -59,6 +69,17 @@ const App = () => {
     setBalanceCalculationErros([]);
   }
 
+  function resetFormData() {
+    setSelectedProject([])
+    setWalletAddresses([])
+    resetData()
+  }
+
+  const clearLocalStorage = event => {
+    localStorage.clear();
+    resetFormData();
+  }
+
   /** Use locally stored wallet addresses and project names if cached earlier **/
   useEffect(() => {
     const storedWalletAddress = localStorage.getItem('storedWalletAddress');
@@ -69,6 +90,11 @@ const App = () => {
     const selectedProject = localStorage.getItem('selectedProject');
     if (selectedProject) {
       setSelectedProject(selectedProject);
+    }
+
+    const projectConfig = JSON.parse(localStorage.getItem('projectConfig'))
+    if (projectConfig) {
+      setProjectConfig(projectConfig)
     }
 
   }, []);
@@ -85,14 +111,15 @@ const App = () => {
 
     const walletAddressList = walletAddresses.split(separator);
 
-    var tokenPrice = await GetLiquidusPrice();
-    //console.log("Token Price: " + tokenPrice)
-    setTokenPrice(tokenPrice);
-
-
+    if (projectConfig) {
+      var tokenPrice = await getTokenPriceBSC(projectConfig.tokenBNBContract);
+      //console.log("Token Price: " + tokenPrice)
+      setTokenPrice(tokenPrice);
+    }
+    
     /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
-    walletAddressList.forEach(address => {
-      PROJECT_CONTRACT_LIST_ALL_CHAINS.forEach(chainContracts => {
+    projectConfig && projectConfig.contracts && walletAddressList.forEach(address => {
+      projectConfig.contracts.forEach(chainContracts => {
 
         //Loop through the pools on each chain
         chainContracts.contractList.forEach(c => {
@@ -114,20 +141,31 @@ const App = () => {
 
   return (
     <Container sx={{ border: 1, my: 10, pb: 10 }} className='outerContainer'>
-      <h3><font color="red">&hearts;&hearts;</font> Sanjaal Corps - Web3 Tool | BNB Price:  <font color="#007600">$<BNBPrice /></font>  {selectedProject === 'liq' && <> | LIQ Price: <font color="#007600">$<LiquidusPrice /></font></>}</h3>
+      <h4><font color="red">&hearts;&hearts;</font> Sanjaal Corps - Web3 Tool | BNB Price:  <font color="#007600">$<BNBPrice /></font></h4>
       <Grid spacing={2} className='outerContainer'>
         <Grid>
           {selectProject(selectedProject, handleProjectChange)}
         </Grid>
       </Grid>
       {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
-      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice, walletAddresses.split(separator))}
-      {selectedProject === 'liq' && <LIQTokenInfo />}
-      <Footer/>
+      <Button onClick={clearLocalStorage} variant='outlined' color="error" sx={{ marginBottom: '1em' }}>Clear Form Data</Button>
+      {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice, walletAddresses.split(separator), selectedProject)}
+      {selectedProject === 'LIQ' && <LIQTokenInfo />}
+      {selectedProject === 'ONI' && <ONITokenInfo />}
+
+      <Footer />
     </Container>
 
   );
 };
+
+function findConfigByProject(project) {
+  if (project) {
+    let configs = PROJECT_CONFIGS.filter(config => config.name.includes(project))
+
+    //Should always match one
+    if (configs) {return configs[0]}} else {return []}
+}
 
 async function getharvestReadyTokens(contractObj, chain, contract, walletAddress, setStateFunction) {
   try {
@@ -148,7 +186,7 @@ async function getharvestReadyTokens(contractObj, chain, contract, walletAddress
       userInfo: { amount: amountEther, rewardDebt: rewardDebtEther, lastDepositedAt: datlastDepositedDate },
       contractLink: contractObj.contractLink,
       addressExplorer: contractObj.addressExplorer,
-      type: contractObj.type, 
+      type: contractObj.type,
       vestingPeriodInMonths: contractObj.vestingPeriodInMonths,
     };
     setStateFunction(prevState => [...prevState, poolHarvestResult]);

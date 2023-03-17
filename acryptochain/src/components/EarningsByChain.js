@@ -71,13 +71,12 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
                                 );
                             })}
 
-                            <TableRow key={'grandTotalRow'} sx={{ background: 'green' }}>
-                                <TableCell sx={{ color: 'white', textAlign: 'right' }}>TOTAL &#x2705; ALL WALLETS &#x2705; ALL CHAINS</TableCell>
+                            <TableRow key={'grandTotalRow'} sx={{ background: 'gray' }}>
+                                <TableCell sx={{ color: 'white', textAlign: 'right' }}>Total</TableCell>
                                 <TableCell sx={{ color: 'white' }}>
-                                &rarr;&nbsp;{totalRewardLiq} LIQ
+                                    {totalRewardLiq} LIQ
                                     <br />
-                                    &rarr;&nbsp;<font size="2">${totalRewardDollar}</font>
-
+                                    <font size="2">${totalRewardDollar}</font>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

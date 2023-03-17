@@ -1,17 +1,23 @@
-import BSC_BNB_ABI from '../abis/bsc/bnb_abi.json'
+//common abis
+
+//bsc abis
 import BSC_LIQ_BNB_LP_TOKEN_ABI from '../abis/bsc/liq_bnb_abi.json'
-import BSC_LIQ_SINGLE_TOKEN_ABI from '../abis/bsc/bsc_liq_token_abi.json'
+import BSC_LIQ_SINGLE_TOKEN_ABI from '../abis/bsc/liq_single_token_abi.json'
 import BSC_LIQ_FARM_CONTRACT_ABI from '../abis/bsc/liq_bsc_farm_single_token_abi.json';
 
+//cronos abis
 import CRONOS_LIQ_SINGLE_TOKEN_ABI from '../abis/cronos/cronos_liq_single_token_abi.json'
 import CRONOS_LIQ_CRO_LP_TOKEN_ABI from '../abis/cronos/liq_cro_lp_abi.json'
 import CRONOS_LIQ_FARM_SINGLE_TOKEN_ABI from '../abis/cronos/liq_cronos_farm_single_token_abi.json'
 
+//matic abis
 import POLYGON_LIQ_SINGLE_TOKEN_ABI from '../abis/matic/polygon_matic_liq_token_abi.json'
 import POLYGON_LIQ_MATIC_LP_TOKEN_ABI from '../abis/matic/polygon_liq_matic_lp_abi.json'
 
+//eth abis
 import ETH_LIQ_ETH_LP_TOKEN_ABI from '../abis/eth/eth_liq_eth_lp_abi.json'
 import ETh_LIQ_SINGLE_TOKEN_ABI from '../abis/eth/eth_liq_token_abi.json'
+
 import { bscNet, cronosNet, ethNet, polygonNet } from '../../../constants/networks'
 import { MATIC_NODE_PROVIDER, BSC_NODE_PROVIDER, CRONOS_NODE_PROVIDER, ETH_NODE_PROVIDER, BSC, MATIC, CRO, ETH, BSC_IMAGE, ETH_IMAGE, CRO_IMAGE, MATIC_IMAGE } from '../../../constants/NetworkProviders';
 
@@ -33,11 +39,6 @@ export const PROJECT_META = {
         {name: 'CoinGecko', link: 'https://www.coingecko.com/en/coins/liquidus/'},
         
     ]
-}
-
-export const CONTRACT_FOR_BNB = {
-    address: '0x58f876857a02d6762e0101bb5c46a8c1ed44dc16',
-    abi: BSC_BNB_ABI
 }
 
 export const BSC_LIQ_SINGLE_TOKEN_CONTRACT = {
@@ -95,8 +96,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 0,
         type: 'LP',
-        name: 'LIQ - BNB',
-        title: 'Biswap',
         contractLink: 'https://bscscan.com/address/0x787fa31b4d75E45c1B83649510a588D580Eb4f57',
         link: 'https://exchange.biswap.org/#/add/ETH/',
         addressExplorer: bscNet[0].addressExplorerPrefixURL
@@ -112,8 +111,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 1,
         type: 'LP',
-        name: 'LIQ - BNB',
-        title: 'PancakeSwap',
         contractLink: 'https://bscscan.com/address/0xb944b748A35B6dFFDd924bffD85910F968943a72',
         link: 'https://pancakeswap.finance/add/BNB/',
         addressExplorer: bscNet[0].addressExplorerPrefixURL
@@ -129,8 +126,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 1,
         type: 'LP',
-        name: 'LIQ - BUSD',
-        title: 'ApeSwap',
         contractLink: 'https://bscscan.com/address/0x7A0D4A0D88994E73a9eDCd79Ecad9097aCb1d937',
         link: 'https://app.apeswap.finance/add/',
         addressExplorer: bscNet[0].addressExplorerPrefixURL
@@ -146,8 +141,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 3,
         type: 'LP',
-        name: 'LIQ - BNB',
-        title: 'Biswap',
         contractLink: 'https://bscscan.com/address/0x19646186D7364b8c1Fb60f9772d2B186EA68983D',
         link: 'https://exchange.biswap.org/#/add/ETH/',
         addressExplorer: bscNet[0].addressExplorerPrefixURL
@@ -163,7 +156,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 1,
         type: 'LIQ',
-        name: 'LIQ - Single Token',
         multiplier: 10,
         contractLink: 'https://bscscan.com/address/0xbeBCd3aD501Fc425a71CDC7593CEDeA324176E92',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
@@ -180,7 +172,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 3,
         type: 'LIQ',
-        name: 'LIQ - Single Token',
         multiplier: 15,
         contractLink: 'https://bscscan.com/address/0x5CcD597728b1F088bFB749D9a9798ED0C6e2211C',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
@@ -197,7 +188,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 6,
         type: 'LIQ',
-        name: 'LIQ - Single Token',
         multiplier: 15,
         contractLink: 'https://bscscan.com/address/0xAb97B17B1547A8776299D4934fF5C8c7b247db6A',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
@@ -214,7 +204,6 @@ export const BSC_CONTRACT_LIST = [
         tokenAbi: BSC_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 12,
         type: 'LIQ',
-        name: 'LIQ - Single Token',
         multiplier: 25,
         contractLink: 'https://bscscan.com/address/0xc6AEd0e5B81383Fd8537f4f805492732BDf8efC0',
         link: 'https://exchange.biswap.org/#/swap?outputCurrency=',
@@ -236,7 +225,6 @@ export const ETH_CONTRACT_LIST = [
         tokenAbi: ETh_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 1,
         type: 'LP',
-        name: 'LIQ - ETH',
         title: 'UniSwap',
         contractLink: 'https://etherscan.io/address/0xd27fab2323edb75af6f4348e3745247e77690e53',
         link: 'https://app.uniswap.org/#/add/v2/ETH/0x5F69b7Ab8F7cAb199a310Fd5A27B43Fef44ddcC0?chain=mainnet',
@@ -258,8 +246,6 @@ export const CRONOS_CONTRACT_LIST = [
         tokenAbi: CRONOS_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 0,
         type: 'LP',
-        name: 'LIQ - CRO',
-        title: 'CronaSwap',
         contractLink: 'https://cronos.crypto.org/explorer/address/0x1c7fDE0a9619bC81b23cAEF6992288BA5547a34F/contracts',
         link: 'https://app.cronaswap.org/add/CRO/',
         addressExplorer: cronosNet[0].addressExplorerPrefixURL
@@ -275,7 +261,6 @@ export const CRONOS_CONTRACT_LIST = [
         tokenAbi: CRONOS_LIQ_CRO_LP_TOKEN_ABI,
         vestingPeriodInMonths: 3,
         type: 'LIQ',
-        name: 'LIQ - Single Token',
         multiplier: 15,
         contractLink: 'https://cronos.crypto.org/explorer/address/0xc7981767f644C7F8e483DAbDc413e8a371b83079/contracts',
         link: 'https://app.cronaswap.org/swap?outputCurrency=',
@@ -295,8 +280,6 @@ export const MATIC_CONTRACT_LIST = [
         tokenAbi: POLYGON_LIQ_SINGLE_TOKEN_ABI,
         vestingPeriodInMonths: 1,
         type: 'LP',
-        name: 'LIQ - MATIC',
-        title: 'QuickSwap V2',
         contractLink: 'https://polygonscan.com/address/0xc7981767f644c7f8e483dabdc413e8a371b83079',
         link: 'https://quickswap.exchange/#/add/0x4036f3d9c45a20f44f0b8B85dD6CA33005fF9654/ETH/v2',
         linkName: 'LIQ-MATIC LP',
@@ -304,7 +287,7 @@ export const MATIC_CONTRACT_LIST = [
     },
 ];
 
-export const PROJECT_CONTRACT_LIST_ALL_CHAINS = [
+export const LIQ_CONTRACTS = [
     {
         key: 1,
         chain: BSC,
@@ -339,10 +322,11 @@ export const PROJECT_CONTRACT_LIST_ALL_CHAINS = [
     },
 ]
 
-export const SUPPORETD_NETWORKS = [
+export const SUPPORTED_NETWORKS_FOR_LIQUIDUS = [
     { chain: BSC, chainImageUrl: BSC_IMAGE },
     { chain: ETH, chainImageUrl: ETH_IMAGE },
     { chain: MATIC, chainImageUrl: MATIC_IMAGE },
     { chain: CRO, chainImageUrl: CRO_IMAGE },
-
 ]
+
+export const tokenBNBContract = LIQ_BNB_CONTRACT

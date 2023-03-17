@@ -1,0 +1,8 @@
+- Filter by wallets
+- Clear Selection Action
+- Summarize Holdings
+- Calculate Farm Price
+- Include overall porfolio value
+- Support for NFT
+- Recent Transactions
+- Make use of logos

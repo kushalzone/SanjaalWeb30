@@ -1,34 +1,10 @@
 import { useState, useEffect } from "react";
-import { parseBNumber } from "../services/app_utils";
-import { CONTRACT_FOR_BNB, LIQ_BNB_CONTRACT, BSC_LIQ_SINGLE_TOKEN_CONTRACT, SUPPORETD_NETWORKS, PROJECT_META } from "../projects/liquidus/config/ProjectConfig";
+import { BSC_LIQ_SINGLE_TOKEN_CONTRACT, SUPPORTED_NETWORKS_FOR_LIQUIDUS, PROJECT_META as PROJECT_META_LIQUIDUS} from "../projects/liquidus/config/ProjectConfig";
+import {PROJECT_META as PROJECT_META_ONINO} from "../projects/onino/config/ProjectConfig"
 import { BSC_NODE_PROVIDER } from "../constants/NetworkProviders"
 import Web3 from "web3";
 import { tokenInfoTable } from "../components/TokenInfo";
-
-/**
- * @returns Price of BNB in USD
- */
-export const BNBPrice = () => {
-    const [bnbPrice, setBnbPrice] = useState(0.0);
-
-    useEffect(() => {
-        const getTokenPrice = async () => {
-            try {
-                const web3 = new Web3(BSC_NODE_PROVIDER);
-                const bnbContract = new web3.eth.Contract(CONTRACT_FOR_BNB.abi, CONTRACT_FOR_BNB.address);
-                const balanceInfo = await bnbContract.methods.getReserves().call();
-                const busdAmount = parseBNumber(balanceInfo._reserve1, 18);
-                const bnbAmount = parseBNumber(balanceInfo._reserve0, 18);
-                const bnbPrice = busdAmount / bnbAmount;
-                setBnbPrice(Number(bnbPrice).toFixed(3))
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        getTokenPrice();
-    }, []);
-    return bnbPrice;
-};
+import { BSC_ONI_SINGLE_TOKEN_CONTRACT, SUPPORTED_NETWORKS_FOR_ONINO } from "../projects/onino/config/ProjectConfig";
 
 /**
  * @returns Information about the token
@@ -49,7 +25,7 @@ export const LIQTokenInfo = () => {
 
                 const totalSupplyEther = Web3.utils.fromWei(totalSupply, 'ether');
                 
-                const result = tokenInfoTable(BSC_LIQ_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner, SUPPORETD_NETWORKS, PROJECT_META)
+                const result = tokenInfoTable(BSC_LIQ_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner, SUPPORTED_NETWORKS_FOR_LIQUIDUS, PROJECT_META_LIQUIDUS)
 
                 setTokenInfo(result)
             } catch (error) {
@@ -61,34 +37,33 @@ export const LIQTokenInfo = () => {
     return tokenInfo;
 };
 
-export const LiquidusPrice = () => {
-    const [tokenPrice, setTokenPrice] = useState(0.0);
+export const ONITokenInfo = () => {
+    const [tokenInfo, setTokenInfo] = useState([]);
 
     useEffect(() => {
-        const getTokenPrice = async () => {
+        const getTokenInfo = async () => {
             try {
                 const web3 = new Web3(BSC_NODE_PROVIDER);
-                const bnbContract = new web3.eth.Contract(CONTRACT_FOR_BNB.abi, CONTRACT_FOR_BNB.address);
-                const balanceInfo = await bnbContract.methods.getReserves().call();
-                const busdAmount = parseBNumber(balanceInfo._reserve1, 18);
-                const bnbAmount = parseBNumber(balanceInfo._reserve0, 18);
-                const bnbPrice = busdAmount / bnbAmount;
+                const tokenContract = new web3.eth.Contract(BSC_ONI_SINGLE_TOKEN_CONTRACT.abi, BSC_ONI_SINGLE_TOKEN_CONTRACT.address);
+                const name = await tokenContract.methods.name().call();
+                const symbol = await tokenContract.methods.symbol().call();
+                const owner = await tokenContract.methods.owner().call();
+                const totalSupply = await tokenContract.methods.totalSupply().call();
+                const decimals = await tokenContract.methods.decimals().call();
 
-                const liqContract = new web3.eth.Contract(LIQ_BNB_CONTRACT.abi, LIQ_BNB_CONTRACT.address);
-                const liqInfo = await liqContract.methods.getReserves().call();
-                const bnb = parseBNumber(liqInfo._reserve0, 18);
-                const liqAmount = parseBNumber(liqInfo._reserve1, 18);
-                const liqPrice = bnb * bnbPrice / liqAmount;
+                const totalSupplyEther = Web3.utils.fromWei(totalSupply, 'ether');
+                
+                const result = tokenInfoTable(BSC_ONI_SINGLE_TOKEN_CONTRACT.address, name, symbol, totalSupplyEther, decimals, owner, SUPPORTED_NETWORKS_FOR_ONINO, PROJECT_META_ONINO)
 
-                setTokenPrice(Number(liqPrice).toFixed(3))
+                setTokenInfo(result)
             } catch (error) {
                 console.error(error);
             }
         };
-        getTokenPrice();
+        getTokenInfo();
     }, []);
-    return tokenPrice || 0;
+    return tokenInfo;
 };
 
 
-export default BNBPrice;
+// export default BNBPrice;

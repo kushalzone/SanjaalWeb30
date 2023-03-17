@@ -21,13 +21,14 @@ import WalletBalance from './WalletBalance';
 import LinkIcon from '@mui/icons-material/Link';
 import EarningsByChain from './EarningsByChain';
 import Grid from '@mui/material/Unstable_Grid2'
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 import { timeSince, UnlockTime } from '../utils/DateTimeUtils';
 import EarningsByWallet from './EarningsByWallet';
-import { lightBlue } from '@mui/material/colors';
 
-function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList) {
+function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList, tokenSymbol) {
 
     //Sums up all the harvest ready tokens for summary display
     const totalHarvestReadyTokens = data.reduce((acc, item) => {
@@ -55,25 +56,25 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
     return (
         <div>
 
-        <h2>REWARDS SUMMARY</h2>
+            <h2>REWARDS SUMMARY | {tokenSymbol} Price: <font color="green">${tokenPrice}</font></h2>
             <Grid container spacing={2}>
-                <Grid xs={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}</Item></Grid>
-                <Grid xs={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item></Grid>
-                <Grid xs={12}><Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item></Grid>
             </Grid>
 
             <h2>REWARDS DETAIL</h2>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 450, tableLayout: "auto", background: 'white'}}>
+                <Table sx={{ minWidth: 450, tableLayout: "auto", background: 'white' }}>
                     <TableHead>
                         <TableRow sx={{ background: '#000000' }}>
-                            <TableCell sx={{ color: 'white' }}>Chain</TableCell>
+
                             <TableCell sx={{ color: 'white' }}>Wallet Address</TableCell>
                             <TableCell sx={{ color: 'white' }}>Farm/Pool</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Deposited Amount</TableCell>
-                            {/* <TableCell sx={{ color: 'white' }}>Reward Debt</TableCell> */}
-                            <TableCell sx={{ color: 'white' }}>Last Deposit</TableCell>
                             <TableCell sx={{ color: 'white' }}>Pending Rewards</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Last Deposit</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Deposited Amount</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Chain</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -83,22 +84,24 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                             var unlocked = unlockStatus.startsWith('Pool unlocks in')
                             return (
                                 <TableRow key={index}>
-                                    <TableCell><StreamIcon fontSize="small" color="primary" />&nbsp;{item.chain || '-'}</TableCell>
-                                    <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
-                                    <TableCell><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon fontSize='small' /></a>&nbsp;<font color="#007600">{String(item.poolName).toUpperCase() || '-'}</font></TableCell>
-                                    <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'} {item.type}</TableCell>
-                                    {/* <TableCell>{Number(item.userInfo?.rewardDebt).toFixed(2) || '-'}</TableCell> */}
+
+                                    <TableCell  sx={{ background: '#000000', color: 'white' }}><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
+                                    <TableCell ><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon sx={{color: 'blue'}} fontSize='small' /></a>&nbsp;{String(item.poolName).toUpperCase() || '-'}</TableCell>
+                                    <TableCell sx={{ fontSize: "2", textAlign: 'center' }}>
+                                        <Stack direction="column" spacing={1}>
+                                            <Chip label={(Number(item.harvestReadyTokens).toFixed(2) || '-') + ' ' + tokenSymbol} variant="contained" color='success' />
+                                            <Chip label={'$'+rewardDollarValue} />
+                                        </Stack>
+
+                                    </TableCell>
                                     <TableCell><b>{item.userInfo?.lastDepositedAt || '-'} </b>
-                                        <br/>
+                                        <br />
                                         <font color="blue">&rArr;&nbsp; Last deposit {timeSince(new Date(item.userInfo?.lastDepositedAt))} ago</font>
-                                        <br/>
-                                        <font size="small" color={unlocked ?'red':'green'}>{unlocked?<LockClockIcon/>:<LockOpenIcon/>}&nbsp;{unlockStatus}</font>
+                                        <br />
+                                        <font size="small" color={unlocked ? 'red' : 'green'}>{unlocked ? <LockClockIcon /> : <LockOpenIcon />}&nbsp;{unlockStatus}</font>
                                     </TableCell>
-                                    <TableCell sx={{ background: '#000000', color: 'white', fontSize: "2", textAlign:'center'}}>
-                                        {Number(item.harvestReadyTokens).toFixed(2) || '-'} LIQ 
-                                        <br/>
-                                        <font color="green">&rarr;&nbsp;${rewardDollarValue}</font>
-                                    </TableCell>
+                                    <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'} {item.type}</TableCell>
+                                    <TableCell><StreamIcon fontSize="small" color="primary" />&nbsp;{item.chain || '-'}</TableCell>
                                 </TableRow>
                             );
                         })}

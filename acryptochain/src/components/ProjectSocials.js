@@ -11,14 +11,16 @@ import Typography from '@mui/material/Typography';
 
 function ProjectSocials(projectMeta) {
     return (
-                <Typography variant="body2" color="white">
-                    <h4>PROJECT SOCIALS</h4>
-                    {projectMeta.socials.map((item, index) => {
-                        return (
-                            <span key={index}><a href={item.link} target='_blank' rel='noreferrer'>{item.name}</a>&nbsp;{' '}</span>
-                        );
-                    })}
-                </Typography>
+        <><h4>PROJECT SOCIALS</h4>
+            <Typography variant="body2" color="white">
+
+                {projectMeta.socials.map((item, index) => {
+                    return (
+                        <span key={index}><a href={item.link} target='_blank' rel='noreferrer'>{item.name}</a>&nbsp;{' '}</span>
+                    );
+                })}
+            </Typography>
+        </>
     )
 }
 
