@@ -16,8 +16,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { Chip } from '@mui/material';
 
-export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAddressList, totalHarvestReadyTokens) {
+export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAddressList, totalHarvestReadyTokens, tokenSymbol) {
 
     ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -70,7 +71,8 @@ export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAd
                     <TableHead>
                         <TableRow sx={{ background: '#000000' }}>
                             <TableCell sx={{ color: 'white' }}>Wallet</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Total</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Pending Rewards</TableCell>
+                            <TableCell sx={{ color: 'white' }}>Rewards Value</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -79,22 +81,16 @@ export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAd
                             return (
                                 item.total > 0.001 && <TableRow key={'totalByWallet' + index}>
                                     <TableCell>{item.label}</TableCell>
-                                    <TableCell>
-                                        {(Number(item.total).toFixed(2) || '0')}
-                                        <br />
-                                        <font color="blue" size="2">${rewardDollarValue}</font>
-                                    </TableCell>
+                                    <TableCell>{(Number(item.total).toFixed(2) || '0') + ' ' + tokenSymbol}</TableCell>
+                                    <TableCell>${rewardDollarValue}</TableCell>
                                 </TableRow>
                             );
                         })}
 
                         <TableRow key={'grandTotalRow'} sx={{ background: 'gray' }}>
                             <TableCell sx={{ color: 'white', textAlign: 'right' }} >Total</TableCell>
-                            <TableCell sx={{ color: 'white' }}>
-                            {totalRewardLiq} LIQ
-                            <br />
-                            <font size="2">${totalRewardDollar}</font>
-                            </TableCell>
+                            <TableCell sx={{ color: 'white' }}><Chip label={totalRewardLiq + ' ' + tokenSymbol} variant="contained" color="success"></Chip></TableCell>
+                            <TableCell sx={{ color: 'white' }}><Chip label={'$' + totalRewardDollar} variant="contained" color="success"></Chip></TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>

@@ -15,13 +15,14 @@ import './App.css';
 
 import Container from '@mui/material/Container';
 
-import { LIQTokenInfo, ONITokenInfo } from './external/TokenUtils';
+import { LIQTokenInfo, ONITokenInfo } from './utils/TokenUtils';
+import { BNBPrice, getTokenPriceBSC } from './utils/TokenPrice';
+
 import { PROJECT_CONFIGS } from './projects/Projects';
 
 import RewardsDetail from './components/RewardsDetail';
 import { selectProject } from './components/ProjectSelectionForm';
 import { WalletEntryForm } from './components/WalletEntryForm';
-import { BNBPrice, getTokenPriceBSC } from './external/TokenPrice';
 import Footer from './components/Footer';
 import { Button } from '@mui/material';
 

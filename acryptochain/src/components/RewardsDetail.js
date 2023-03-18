@@ -27,6 +27,7 @@ import { styled } from '@mui/material/styles';
 import { SortByChain, SortByWallet } from '../utils/DataUtils';
 import { timeSince, UnlockTime } from '../utils/DateTimeUtils';
 import EarningsByWallet from './EarningsByWallet';
+import PortfolioSummary from './PortfolioSummary';
 
 function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList, tokenSymbol) {
 
@@ -58,9 +59,10 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
 
             <h2>REWARDS SUMMARY | {tokenSymbol} Price: <font color="green">${tokenPrice}</font></h2>
             <Grid container spacing={2}>
-                <Grid xs={12} lg={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens)}</Item></Grid>
-                <Grid xs={12} lg={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
                 <Grid xs={12} lg={6}><Item>{WalletBalance(balance, balanceErrors, tokenPrice)}</Item></Grid>
+                <Grid xs={12} lg={6}><Item>{PortfolioSummary(balance, sortedFilteredData, tokenPrice, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
             </Grid>
 
             <h2>REWARDS DETAIL</h2>
@@ -90,7 +92,7 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                                     <TableCell sx={{ fontSize: "2", textAlign: 'center' }}>
                                         <Stack direction="column" spacing={1}>
                                             <Chip label={(Number(item.harvestReadyTokens).toFixed(2) || '-') + ' ' + tokenSymbol} variant="contained" color='success' />
-                                            <Chip label={'$'+rewardDollarValue} />
+                                            <Chip label={'$'+rewardDollarValue} variant="outlined" />
                                         </Stack>
 
                                     </TableCell>

@@ -1,3 +1,6 @@
+Release 0.12 | 2023 MAR 18
+- Added Portfolio Summary Section
+
 Release 0.11 | 2023 MAR 17
 - Added support for Onino Project
 - Added feature to allow clearing of the form data

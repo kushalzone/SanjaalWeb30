@@ -25,7 +25,7 @@ export default class Footer extends PureComponent {
                     <Button sx={{mr:'1em'}} size="small" variant="outlined" href='https://github.com/sanjaalcorps/SanjaalWeb30/blob/master/ReleaseNotes.MD'>Release Notes</Button>
                     <Button sx={{mr:'1em'}} size="small" variant="outlined" href='https://github.com/sanjaalcorps/SanjaalWeb30/'>Source Code</Button>
                     <Button sx={{mr:'1em'}} size="small" variant="outlined" href='https://www.acryptochain.com'>ACryptoChain Blog</Button>
-                    <p/>{'[Version: 0.10, Released on : March 15th 2023]'}
+                    <p/>{'[Version: 0.12, Released on : March 18th 2023]'}
                     <Typography gutterBottom variant='p' component={'em'} color='gray' fontSize={'small'}>
                         <p/>This tool is developed by Sanjaal Corps with security of the user data in mind. We never collect or ask for your seed phrase or private key. We only use public wallet address input by the user to fetch information about it. 
                         There are no wallets to connect, no approvals of any kind needed. We also don't require users to do a manual switching of Networks. We don't collect your ip address or location. On top of that the source code is released publicly on github.

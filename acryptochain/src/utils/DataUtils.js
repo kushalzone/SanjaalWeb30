@@ -27,4 +27,20 @@ export function FullSort(poolHarvestResult) {
     return SortByChain(SortByWallet(poolHarvestResult))
 }
 
+export function UniqueChainsUsed(poolHarvestResult) {
+    let chains = [];
+    poolHarvestResult.forEach((obj) => {
+      let chain = obj.chain;
+      if (!chains.includes(chain)) {
+        chains.push(chain);
+      }
+    });
+    return chains.map(item => item.trim()).join();
+}
+
+export function TwoDecimals(data) {
+    return Number(data).toFixed(2) || 0.0
+}
+  
+
 

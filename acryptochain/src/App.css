@@ -82,6 +82,11 @@ a:active {
   width: 100%;
 }
 
+.portfolioSummary {
+  text-align: left;
+  width: 100%;
+}
+
 .tokenInfo {
   justify-content: center;
   font-size: medium;
@@ -90,7 +95,8 @@ a:active {
 }
 
 .fineLine {
-  justify-content: right;
+  text-align: left;
+  justify-content: left;
   font-size: medium;
   padding: 1em;
 }

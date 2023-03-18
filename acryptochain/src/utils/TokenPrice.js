@@ -62,3 +62,38 @@ export const BNBPrice = () => {
     }, []);
     return bnbPrice;
 };
+/**
+
+// Total supply of LP tokens
+const total_LP_tokens = 100000;
+
+// Calculate the price of an LP token
+const LP_token_price = (2 * reserve_token_1 * price_token_1 + reserve_token_2 * price_token_2) / (2 * total_LP_tokens);
+
+console.log('Price of an LP token: ' + LP_token_price);
+ *In this example, we assume that the liquidity pool contains 1000 units of token 1 and 2 units of token 2, 
+ and the current market prices of token 1 and token 2 are 0.01 and 500, respectively. 
+ We also assume that there are 100,000 LP tokens in total supply. The code calculates the price of an LP token 
+ using the formula above and logs the result to the console. Note that the result is the price of one LP token in terms of the underlying assets in the pool. 
+ */
+export async function CalculateLPTokenPrice(lpTokenContract, price_token_1, price_token_2) {
+    try {
+        const web3 = new Web3(BSC_NODE_PROVIDER);
+        const tokenContract = new web3.eth.Contract(lpTokenContract.abi, lpTokenContract.address);
+        const reserves = await tokenContract.methods.getReserves().call();
+
+        //Amount of tokens in the liquidity pool
+        const reserve_token_1 = parseBNumber(reserves._reserve0, 18);
+        const reserve_token_2 = parseBNumber(reserves._reserve1, 18);
+
+        const totalSupply = await tokenContract.methods.totalSupply().call();
+
+        // const LP_token_price = (2 * reserve_token_1 * price_token_1 + reserve_token_2 * price_token_2) / (2 * total_LP_tokens);
+        const LP_token_price = (2 * reserve_token_1 * price_token_1 + reserve_token_2 * price_token_2) / (2 * totalSupply);
+
+        return LP_token_price;
+    } catch (error) {
+        console.error(error);
+        return 0;
+    }
+};
