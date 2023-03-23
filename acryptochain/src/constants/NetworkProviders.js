@@ -23,3 +23,19 @@ export const CRO_IMAGE = cronosNet[0].chainImageUrl
 export const MATIC = polygonNet[0].chainNameShort;
 export const MATIC_NODE_PROVIDER = polygonNet[0].rpcUrls[0]
 export const MATIC_IMAGE = polygonNet[0].chainImageUrl
+
+export const CHAIN_INFO = [
+    {network: BSC, chainImageUrl: BSC_IMAGE},
+    {network: ETH, chainImageUrl: ETH_IMAGE},
+    {network: MATIC, chainImageUrl: MATIC_IMAGE},
+    {network: CRO, chainImageUrl: CRO_IMAGE},
+]
+
+export function getChainImageUrl(network) {
+    for (let i = 0; i < CHAIN_INFO.length; i++) {
+        if (CHAIN_INFO[i].network === network) {
+            return CHAIN_INFO[i].chainImageUrl;
+        }
+    }
+    return null; // If the network is not found in the array
+}

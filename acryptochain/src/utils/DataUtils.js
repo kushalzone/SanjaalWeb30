@@ -35,7 +35,7 @@ export function UniqueChainsUsed(poolHarvestResult) {
         chains.push(chain);
       }
     });
-    return chains.map(item => item.trim()).join();
+    return chains
 }
 
 export function TwoDecimals(data) {

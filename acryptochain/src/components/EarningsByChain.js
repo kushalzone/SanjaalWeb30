@@ -11,6 +11,7 @@ import Paper from '@mui/material/Paper';
 import { BSC, ETH, MATIC, CRONOS } from '../constants/networks';
 import { BSC_IMAGE, CRO_IMAGE, MATIC_IMAGE, ETH_IMAGE } from '../constants/NetworkProviders';
 import { Chip } from '@mui/material';
+import { UniqueChainsUsed } from '../utils/DataUtils';
 
 export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarvestReadyTokens, tokenSymbol) {
 
@@ -18,6 +19,7 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
     const cronosTotal = getTotalByChain(poolHarvestResult, CRONOS)
     const maticTotal = getTotalByChain(poolHarvestResult, MATIC)
     const ethTotal = getTotalByChain(poolHarvestResult, ETH)
+    const  uniqueChains = UniqueChainsUsed(poolHarvestResult)
     const totalAmountData = [
         { chain: BSC, total: bscTotal, logo: BSC_IMAGE },
         { chain: CRONOS, total: cronosTotal, logo: CRO_IMAGE },
@@ -31,7 +33,7 @@ export default function EarningsByChain(poolHarvestResult, tokenPrice, totalHarv
     ChartJS.register(ArcElement, Tooltip, Legend);
 
     const data = {
-        labels: [BSC, CRONOS, MATIC, ETH],
+        labels: uniqueChains,
         datasets: [
             {
                 data: [bscTotal, cronosTotal, maticTotal, ethTotal],

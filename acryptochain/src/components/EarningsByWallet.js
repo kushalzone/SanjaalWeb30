@@ -18,7 +18,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Chip } from '@mui/material';
 
-export default function EarningsByWallet(poolHarvestResult, tokenPrice, walletAddressList, totalHarvestReadyTokens, tokenSymbol) {
+export default function  EarningsByWallet(poolHarvestResult, tokenPrice, walletAddressList, totalHarvestReadyTokens, tokenSymbol) {
 
     ChartJS.register(ArcElement, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 

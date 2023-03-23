@@ -11,7 +11,6 @@ import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Chip from '@mui/material/Chip';
@@ -38,40 +37,36 @@ function PortfolioSummary(walletBalance, pendingPoolHarvestResult, tokenPrice, t
             return acc;
         }
     }, 0);
+
+    const uniqueChains = UniqueChainsUsed(pendingPoolHarvestResult).map(item => item.trim()).join();
+    const portFolioValue = TwoDecimals((totalSingleTokenDeposited + totalBalance + totalHarvestReadyTokens)*tokenPrice);
+    const totalTokensCount = TwoDecimals(totalBalance + totalSingleTokenDeposited + totalHarvestReadyTokens);
     
     const tableData = [
 
-        {label:'Total Tokens (LP Excluded)', value:TwoDecimals(totalBalance + totalSingleTokenDeposited + totalHarvestReadyTokens) + ' ' + tokenSymbol, description:'Wallet + Single Token Deposits + Pending Rewards'},
-        {label:'Total Portfolio Value', value: 'USD ' + TwoDecimals((totalSingleTokenDeposited + totalBalance + totalHarvestReadyTokens)*tokenPrice), description:'LP Holdings or deposits not included' },
-        // {label:'Total Portfolio Value (LP included)', value:'TBD'},
+        {label:'Total Tokens (LP Excluded)', value: totalTokensCount + ' ' + tokenSymbol, description:'Wallet + Single Token Deposits + Pending Rewards'},
+        {label:'Total Portfolio Value', value: 'USD ' + portFolioValue, description:'LP Holdings or LP deposits not included' },
         {label:'Tokens in wallets', value:TwoDecimals(totalBalance)+ ' ' + tokenSymbol},
         {label:'Tokens in Single Token Pool', value: TwoDecimals(totalSingleTokenDeposited)+ ' ' + tokenSymbol},
         {label:'Total Pending Rewards', value:TwoDecimals(totalHarvestReadyTokens)+ ' ' + tokenSymbol},
-        {label:'Chains Used', value:UniqueChainsUsed(pendingPoolHarvestResult)},
-        
+       
     ]
     
     return (<>
         <div className='portfolioSummary'>
             <h3 className='centerText'>Portfolio Summary</h3>
-            <h6 className='centerText'>Collective summary for your wallets, all chains</h6>
+            <h6 className='centerText'>Collective summary for ALL your wallets in ALL chains you've used ({uniqueChains})</h6>
             {/* Print Wallets with Balance */}
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 450, tableLayout: "auto", background: "white" }}>
-                    <TableHead>
-                        <TableRow sx={{ background: '#000000' }}>
-                            <TableCell sx={{ color: 'white' }}>Item</TableCell>
-                            <TableCell sx={{ color: 'white' }}>Value</TableCell>
-                        </TableRow>
-                    </TableHead>
                     <TableBody>
                         {tableData.map((item, index) => {
-                            const variant = (index===0 || index ===1 ) ? 'contained' : 'outlined'
+                            const variant = (index < 3 ) ? 'contained' : 'outlined'
                             if (item) {
                                 return (
                                     <TableRow key={index}>
-                                        <TableCell>{item.label} <br/><font color="blue"><small>{item.description}</small></font></TableCell>
-                                        <TableCell><Chip label={item.value} variant={variant} color='info'></Chip></TableCell>
+                                        <TableCell sx={{width:'55%'}}>{item.label} <br/><font color="blue"><small>{item.description}</small></font></TableCell>
+                                        <TableCell sx={{width:'45%'}}><Chip label={item.value} variant={variant} color='info'></Chip></TableCell>
                                     </TableRow>
                                 );
                             } else { return '' }

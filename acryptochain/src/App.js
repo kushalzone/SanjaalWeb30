@@ -25,6 +25,9 @@ import { selectProject } from './components/ProjectSelectionForm';
 import { WalletEntryForm } from './components/WalletEntryForm';
 import Footer from './components/Footer';
 import { Button } from '@mui/material';
+import { getStakedNFTs } from './utils/NFTUtils';
+import StakedNFTsDisplay from './components/StakedNFTsDisplay';
+import { releaseVersion } from './constants/ReleaseConstants';
 
 const App = () => {
   /** User Inputs on UI **/
@@ -39,6 +42,8 @@ const App = () => {
   const [balanceOf, setBalanceOf] = useState([]);
   const [balanceCalcuationErrors, setBalanceCalculationErros] = useState([]);
   const [tokenPrice, setTokenPrice] = useState(0.0);
+
+  const [stakedNFTList, setStakedNFTList] = useState([])
 
   /** Flag to indicate if data has been loaded. **/
   const [loaded, setLoaded] = useState(false);
@@ -68,6 +73,7 @@ const App = () => {
     setPoolHarvestResult([]);
     setBalanceOf([]);
     setBalanceCalculationErros([]);
+    setStakedNFTList([])
   }
 
   function resetFormData() {
@@ -117,32 +123,47 @@ const App = () => {
       //console.log("Token Price: " + tokenPrice)
       setTokenPrice(tokenPrice);
     }
-    
+
     /* Wallet Address field can accept multiple addresses, so split it and run the logic for each address*/
-    projectConfig && projectConfig.contracts && walletAddressList.forEach(address => {
-      projectConfig.contracts.forEach(chainContracts => {
+    projectConfig && projectConfig.contracts && walletAddressList.forEach(wallet => {
+
+      //Tokens and LPs
+      projectConfig.contracts.forEach(chainSpecificContracts => {
 
         //Loop through the pools on each chain
-        chainContracts.contractList.forEach(c => {
-          const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
+        chainSpecificContracts.contractList.forEach(c => {
+          const web3Object = new Web3(new Web3.providers.HttpProvider(chainSpecificContracts.provider));
           let web3Contract = new web3Object.eth.Contract(c.abi, c.address);
-          getharvestReadyTokens(c, chainContracts.chain, web3Contract, String(address).trim(), setPoolHarvestResult)
+          getharvestReadyTokens(c, chainSpecificContracts.chain, web3Contract, String(wallet).trim(), setPoolHarvestResult)
         });
 
         //Find total balance by Chain
-        const web3Object = new Web3(new Web3.providers.HttpProvider(chainContracts.provider));
-        const tokenContract = new web3Object.eth.Contract(chainContracts.singleTokenAbi, chainContracts.singleTokenAddress);
+        const web3Object = new Web3(new Web3.providers.HttpProvider(chainSpecificContracts.provider));
+        const tokenContract = new web3Object.eth.Contract(chainSpecificContracts.singleTokenAbi, chainSpecificContracts.singleTokenAddress);
         //console.log("Chain: " + chainContracts.chain + " Address: " + chainContracts.singleTokenAddress)
-        getBalanceOf(chainContracts.chain, tokenContract, address, setBalanceOf, setBalanceCalculationErros)
+        getBalanceOf(chainSpecificContracts.chain, tokenContract, wallet, setBalanceOf, setBalanceCalculationErros)
 
       });
+
+      //Staked NFTs:
+      projectConfig.nftContracts.forEach(chainSpecificContracts => {
+        chainSpecificContracts.contractList.forEach(c => {
+          getStakedNFTs(c.nftStakingContract, c.nftStakingAbi, c.smallImage, wallet, chainSpecificContracts.provider, chainSpecificContracts.chain, selectedProject, setStakedNFTList).then(result => {
+            //console.log("Owned NFTs" + JSON.stringify(stakedNFTList));
+          });
+        });
+      });
+
+      //Owned NFTs
+      //TBD
+
     });
     setLoaded(true)
   };
 
   return (
     <Container sx={{ border: 1, my: 10, pb: 10 }} className='outerContainer'>
-      <h4><font color="red">&hearts;&hearts;</font> Sanjaal Corps - Web3 Tool | BNB Price:  <font color="#007600">$<BNBPrice /></font></h4>
+      <h4><font color="red">&hearts;&hearts;</font> Sanjaal Web3 Tool {releaseVersion} | BNB Price:  <font color="#007600">$<BNBPrice /></font></h4>
       <Grid spacing={2} className='outerContainer'>
         <Grid>
           {selectProject(selectedProject, handleProjectChange)}
@@ -150,6 +171,7 @@ const App = () => {
       </Grid>
       {selectedProject && WalletEntryForm(handleWalletSubmit, walletAddresses, handleWalletInputChange)}
       <Button onClick={clearLocalStorage} variant='outlined' color="error" sx={{ marginBottom: '1em' }}>Clear Form Data</Button>
+      {StakedNFTsDisplay(stakedNFTList)}
       {loaded && poolHarvestResult && RewardsDetail(poolHarvestResult, balanceOf, balanceCalcuationErrors, tokenPrice, walletAddresses.split(separator), selectedProject)}
       {selectedProject === 'LIQ' && <LIQTokenInfo />}
       {selectedProject === 'ONI' && <ONITokenInfo />}
@@ -165,7 +187,8 @@ function findConfigByProject(project) {
     let configs = PROJECT_CONFIGS.filter(config => config.name.includes(project))
 
     //Should always match one
-    if (configs) {return configs[0]}} else {return []}
+    if (configs) { return configs[0] }
+  } else { return [] }
 }
 
 async function getharvestReadyTokens(contractObj, chain, contract, walletAddress, setStateFunction) {

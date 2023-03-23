@@ -28,6 +28,8 @@ import { SortByChain, SortByWallet } from '../utils/DataUtils';
 import { timeSince, UnlockTime } from '../utils/DateTimeUtils';
 import EarningsByWallet from './EarningsByWallet';
 import PortfolioSummary from './PortfolioSummary';
+import { Avatar } from '@mui/material';
+import { getChainImageUrl } from '../constants/NetworkProviders';
 
 function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressList, tokenSymbol) {
 
@@ -57,7 +59,7 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
     return (
         <div>
 
-            <h2>REWARDS SUMMARY | {tokenSymbol} Price: <font color="green">${tokenPrice}</font></h2>
+            <h4>Rewards Summary | {tokenSymbol} Price: <font color="green">${tokenPrice}</font></h4>
             <Grid container spacing={2}>
                 <Grid xs={12} lg={6}><Item>{EarningsByWallet(sortedFilteredData, tokenPrice, walletAddressList, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
                 <Grid xs={12} lg={6}><Item>{EarningsByChain(sortedFilteredData, tokenPrice, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
@@ -65,7 +67,7 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                 <Grid xs={12} lg={6}><Item>{PortfolioSummary(balance, sortedFilteredData, tokenPrice, totalHarvestReadyTokens, tokenSymbol)}</Item></Grid>
             </Grid>
 
-            <h2>REWARDS DETAIL</h2>
+            <h4>Rewards Details</h4>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 450, tableLayout: "auto", background: 'white' }}>
                     <TableHead>
@@ -84,15 +86,16 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                             const rewardDollarValue = ((Number(item.harvestReadyTokens).toFixed(2) || '0') * Number(tokenPrice || 0)).toFixed(2);
                             const unlockStatus = UnlockTime(item.vestingPeriodInMonths, new Date(item.userInfo?.lastDepositedAt));
                             var unlocked = unlockStatus.startsWith('Pool unlocks in')
+                            const chainImageURL = getChainImageUrl(item.chain)
                             return (
                                 <TableRow key={index}>
 
-                                    <TableCell  sx={{ background: '#000000', color: 'white' }}><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
-                                    <TableCell ><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon sx={{color: 'blue'}} fontSize='small' /></a>&nbsp;{String(item.poolName).toUpperCase() || '-'}</TableCell>
+                                    <TableCell><a href={item.addressExplorer + item.walletAddress} target='_blank' rel='noreferrer'>{String(item.walletAddress).substring(0, 10) || '-'}</a></TableCell>
+                                    <TableCell ><a href={item.contractLink} target='_blank' rel='noreferrer'><LinkIcon sx={{ color: 'blue' }} fontSize='small' /></a>&nbsp;{String(item.poolName).toUpperCase() || '-'}</TableCell>
                                     <TableCell sx={{ fontSize: "2", textAlign: 'center' }}>
                                         <Stack direction="column" spacing={1}>
                                             <Chip label={(Number(item.harvestReadyTokens).toFixed(2) || '-') + ' ' + tokenSymbol} variant="contained" color='success' />
-                                            <Chip label={'$'+rewardDollarValue} variant="outlined" />
+                                            <Chip label={'$' + rewardDollarValue} variant="outlined" />
                                         </Stack>
 
                                     </TableCell>
@@ -103,7 +106,9 @@ function RewardsDetail(data, balance, balanceErrors, tokenPrice, walletAddressLi
                                         <font size="small" color={unlocked ? 'red' : 'green'}>{unlocked ? <LockClockIcon /> : <LockOpenIcon />}&nbsp;{unlockStatus}</font>
                                     </TableCell>
                                     <TableCell>{Number(item.userInfo?.amount).toFixed(2) || '-'} {item.type}</TableCell>
-                                    <TableCell><StreamIcon fontSize="small" color="primary" />&nbsp;{item.chain || '-'}</TableCell>
+                                    <TableCell>
+                                        <Chip variant="outlined" color="info" sx={{ margin: '1px' }} label={item.chain} avatar={<Avatar alt="Natacha" src={chainImageURL} />} />
+                                    </TableCell>
                                 </TableRow>
                             );
                         })}

@@ -1,3 +1,6 @@
+Release 0.13 | 2023 MAR 23
+- Added support for staked NFT display
+
 Release 0.12 | 2023 MAR 18
 - Added Portfolio Summary Section
 
